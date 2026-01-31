@@ -10,6 +10,8 @@ const dashboardTopology = document.getElementById("dashboard-topology");
 const topologyTabs = document.querySelectorAll(".topology-tab");
 const topologyAreaSelect = document.getElementById("topology-area-select");
 const topologyStage = document.getElementById("topology-stage");
+const languageSelect = document.getElementById("language-select");
+const themeToggle = document.getElementById("theme-toggle");
 const topologyNodeForm = document.getElementById("topology-node-form");
 const topologyLinkForm = document.getElementById("topology-link-form");
 const topologyNodeList = document.getElementById("topology-node-list");
@@ -76,17 +78,249 @@ const devices = [
   { name: "Call-Manager", ip: "10.50.0.20", category: "server", status: "online" },
 ];
 
+const translations = {
+  ru: {
+    "brand.title": "Центр контроля",
+    "brand.subtitle": "Network Command",
+    "nav.dashboard": "Дашборд",
+    "nav.network": "Сеть",
+    "nav.topology": "Топология",
+    "nav.nodes": "Узлы",
+    "nav.events": "События",
+    "nav.reports": "Отчёты",
+    "nav.settings": "Настройки",
+    "sidebar.statusLabel": "Состояние агента",
+    "sidebar.statusActive": "Активен",
+    "sidebar.languageLabel": "Язык",
+    "sidebar.themeLight": "Светлая тема",
+    "sidebar.themeDark": "Тёмная тема",
+    "dashboard.title": "Центр контроля сети",
+    "dashboard.subtitle": "250 коммутаторов • 600 IP-телефонов • живые пинги",
+    "actions.export": "Экспорт",
+    "actions.createReport": "Создать отчёт",
+    "actions.import": "Импорт",
+    "actions.addNode": "Добавить узел",
+    "actions.filter": "Фильтр",
+    "actions.exportCsv": "Экспорт CSV",
+    "actions.templates": "Шаблоны",
+    "actions.reset": "Сброс",
+    "actions.save": "Сохранить",
+    "actions.optimize": "Оптимизация",
+    "actions.diagnostics": "Диагностика",
+    "actions.escalate": "Эскалация",
+    "actions.plan": "План работ",
+    "actions.createTicket": "Создать тикет",
+    "actions.details": "Подробнее",
+    "actions.configure": "Настроить",
+    "categories.title": "Категории устройств",
+    "categories.subtitle": "Переключайтесь между группами и добавляйте новые устройства",
+    "categories.all": "Все",
+    "categories.switch": "Коммутаторы",
+    "categories.phone": "IP-телефоны",
+    "categories.router": "Маршрутизаторы",
+    "categories.server": "Серверы",
+    "traffic.title": "Трафик магистрали",
+    "traffic.subtitle": "Gbps, последние 12 часов",
+    "traffic.realtime": "Real-time",
+    "incidents.title": "Инциденты по зонам",
+    "incidents.subtitle": "Текущие состояния",
+    "topologyCard.title": "Топология нагрузки",
+    "topologyCard.subtitle": "Графическая карта коммутаторов",
+    "ping.title": "Пинг критичных узлов",
+    "ping.subtitle": "Живые пинги",
+    "network.title": "Сеть",
+    "network.subtitle": "Обзор каналов связи и сегментов",
+    "network.coreLinks": "Каналы ядра",
+    "network.coreLinksSubtitle": "Средняя загрузка 68%",
+    "network.segmentMap": "Карта сегментов",
+    "network.segmentMapSubtitle": "Core • Access • Voice",
+    "network.segmentOverlay": "Сегменты: Core, Access, Voice",
+    "network.segmentActive": "Активно: 14",
+    "nodes.title": "Узлы",
+    "nodes.subtitle": "Список устройств и групп",
+    "inventory.title": "Инвентарь устройств",
+    "inventory.subtitle": "Доступно через таблицу на дашборде",
+    "topology.title": "Топология",
+    "topology.subtitle": "Соберите схему сети и наблюдайте за связями",
+    "topology.edit": "Редактировать",
+    "topology.editing": "Редактирование",
+    "topology.linksOn": "Линии: вкл",
+    "topology.linksOff": "Линии: выкл",
+    "topology.clearLinks": "Очистить линии",
+    "topology.save": "Сохранить схему",
+    "topology.builderTitle": "Конструктор топологии",
+    "topology.builderSubtitle": "Добавляйте узлы и связи — данные сразу появятся на дашборде",
+    "topology.nodeName": "Имя узла",
+    "topology.nodeNamePlaceholder": "SW-###",
+    "topology.nodeType": "Тип устройства",
+    "topology.nodeZone": "Зона",
+    "topology.addNode": "Добавить узел",
+    "topology.nodeA": "Узел A",
+    "topology.nodeB": "Узел B",
+    "topology.linkType": "Тип связи",
+    "topology.addLink": "Добавить связь",
+    "topology.hintTitle": "Быстрое соединение",
+    "topology.hintText":
+      "Включите «Редактировать» и «Линии», кликните по двум узлам и выберите тип связи.",
+    "topology.summaryNodes": "Узлов",
+    "topology.summaryLinks": "Связей",
+    "topology.summaryZones": "Зон",
+    "events.title": "События",
+    "events.subtitle": "Лента инцидентов и уведомлений",
+    "events.recentTitle": "Инциденты за 24 часа",
+    "reports.title": "Отчёты",
+    "reports.subtitle": "Подготовка аналитики и отчётности",
+    "settings.title": "Настройки",
+    "settings.subtitle": "Параметры мониторинга и интеграций",
+    "labels.device": "Устройство",
+    "labels.ip": "IP",
+    "labels.category": "Категория",
+    "labels.status": "Статус",
+    "labels.actions": "Действия",
+    "labels.ping": "Пинг",
+    "labels.edit": "Редактировать",
+    "category.switch": "Коммутатор",
+    "category.phone": "IP-телефон",
+    "category.router": "Маршрутизатор",
+    "category.server": "Сервер",
+    "status.online": "Онлайн",
+    "status.warning": "Предупреждение",
+    "status.offline": "Оффлайн",
+    "type.core": "Core",
+    "type.access": "Access",
+    "type.voice": "Voice",
+    "type.edge": "Edge",
+  },
+  uz: {
+    "brand.title": "Nazorat markazi",
+    "brand.subtitle": "Network Command",
+    "nav.dashboard": "Panel",
+    "nav.network": "Tarmoq",
+    "nav.topology": "Topologiya",
+    "nav.nodes": "Tugunlar",
+    "nav.events": "Hodisalar",
+    "nav.reports": "Hisobotlar",
+    "nav.settings": "Sozlamalar",
+    "sidebar.statusLabel": "Agent holati",
+    "sidebar.statusActive": "Faol",
+    "sidebar.languageLabel": "Til",
+    "sidebar.themeLight": "Yorug‘ tema",
+    "sidebar.themeDark": "Qorong‘i tema",
+    "dashboard.title": "Tarmoq nazorat markazi",
+    "dashboard.subtitle": "250 kommutator • 600 IP-telefon • jonli pinglar",
+    "actions.export": "Eksport",
+    "actions.createReport": "Hisobot yaratish",
+    "actions.import": "Import",
+    "actions.addNode": "Tugun qo‘shish",
+    "actions.filter": "Filtr",
+    "actions.exportCsv": "CSV eksport",
+    "actions.templates": "Shablonlar",
+    "actions.reset": "Qayta tiklash",
+    "actions.save": "Saqlash",
+    "actions.optimize": "Optimallashtirish",
+    "actions.diagnostics": "Diagnostika",
+    "actions.escalate": "Eskalatsiya",
+    "actions.plan": "Ishlar rejasi",
+    "actions.createTicket": "Tiket yaratish",
+    "actions.details": "Batafsil",
+    "actions.configure": "Sozlash",
+    "categories.title": "Qurilma kategoriyalari",
+    "categories.subtitle": "Guruhlar o‘rtasida o‘ting va yangi qurilmalar qo‘shing",
+    "categories.all": "Barchasi",
+    "categories.switch": "Kommutatorlar",
+    "categories.phone": "IP-telefonlar",
+    "categories.router": "Marshrutizatorlar",
+    "categories.server": "Serverlar",
+    "traffic.title": "Magistral trafik",
+    "traffic.subtitle": "Gbps, oxirgi 12 soat",
+    "traffic.realtime": "Real-time",
+    "incidents.title": "Zonalar bo‘yicha hodisalar",
+    "incidents.subtitle": "Joriy holatlar",
+    "topologyCard.title": "Yuklama topologiyasi",
+    "topologyCard.subtitle": "Kommutatorlarning grafik xaritasi",
+    "ping.title": "Muhim tugunlar pingi",
+    "ping.subtitle": "Jonli pinglar",
+    "network.title": "Tarmoq",
+    "network.subtitle": "Aloqa kanallari va segmentlar sharhi",
+    "network.coreLinks": "Yadro kanallari",
+    "network.coreLinksSubtitle": "O‘rtacha yuklama 68%",
+    "network.segmentMap": "Segmentlar xaritasi",
+    "network.segmentMapSubtitle": "Core • Access • Voice",
+    "network.segmentOverlay": "Segmentlar: Core, Access, Voice",
+    "network.segmentActive": "Faol: 14",
+    "nodes.title": "Tugunlar",
+    "nodes.subtitle": "Qurilmalar va guruhlar ro‘yxati",
+    "inventory.title": "Qurilmalar inventari",
+    "inventory.subtitle": "Paneldagi jadval orqali mavjud",
+    "topology.title": "Topologiya",
+    "topology.subtitle": "Tarmoq sxemasini yig‘ing va bog‘lanishlarni kuzating",
+    "topology.edit": "Tahrirlash",
+    "topology.editing": "Tahrirlash rejimi",
+    "topology.linksOn": "Chiziqlar: yoq",
+    "topology.linksOff": "Chiziqlar: o‘ch",
+    "topology.clearLinks": "Chiziqlarni tozalash",
+    "topology.save": "Sxemani saqlash",
+    "topology.builderTitle": "Topologiya konstruktori",
+    "topology.builderSubtitle": "Tugunlar va bog‘lanishlarni qo‘shing — ma’lumotlar panelda darhol ko‘rinadi",
+    "topology.nodeName": "Tugun nomi",
+    "topology.nodeNamePlaceholder": "SW-###",
+    "topology.nodeType": "Qurilma turi",
+    "topology.nodeZone": "Zona",
+    "topology.addNode": "Tugun qo‘shish",
+    "topology.nodeA": "Tugun A",
+    "topology.nodeB": "Tugun B",
+    "topology.linkType": "Bog‘lanish turi",
+    "topology.addLink": "Bog‘lanish qo‘shish",
+    "topology.hintTitle": "Tez ulash",
+    "topology.hintText":
+      "«Tahrirlash» va «Chiziqlar»ni yoqing, ikki tugunni bosing va bog‘lanish turini tanlang.",
+    "topology.summaryNodes": "Tugunlar",
+    "topology.summaryLinks": "Bog‘lanishlar",
+    "topology.summaryZones": "Zonalar",
+    "events.title": "Hodisalar",
+    "events.subtitle": "Hodisalar va bildirishnomalar lentasi",
+    "events.recentTitle": "Oxirgi 24 soatdagi hodisalar",
+    "reports.title": "Hisobotlar",
+    "reports.subtitle": "Tahlil va hisobot tayyorlash",
+    "settings.title": "Sozlamalar",
+    "settings.subtitle": "Monitoring va integratsiya parametrlari",
+    "labels.device": "Qurilma",
+    "labels.ip": "IP",
+    "labels.category": "Kategoriya",
+    "labels.status": "Holat",
+    "labels.actions": "Amallar",
+    "labels.ping": "Ping",
+    "labels.edit": "Tahrirlash",
+    "category.switch": "Kommutator",
+    "category.phone": "IP-telefon",
+    "category.router": "Marshrutizator",
+    "category.server": "Server",
+    "status.online": "Onlayn",
+    "status.warning": "Ogohlantirish",
+    "status.offline": "Oflayn",
+    "type.core": "Core",
+    "type.access": "Access",
+    "type.voice": "Voice",
+    "type.edge": "Edge",
+  },
+};
+
+let activeLanguage = "ru";
+
+const translate = (key) =>
+  translations[activeLanguage]?.[key] ?? translations.ru[key] ?? key;
+
 const categoryLabels = {
-  switch: "Коммутатор",
-  phone: "IP-телефон",
-  router: "Маршрутизатор",
-  server: "Сервер",
+  switch: () => translate("category.switch"),
+  phone: () => translate("category.phone"),
+  router: () => translate("category.router"),
+  server: () => translate("category.server"),
 };
 
 const statusLabels = {
-  online: "Онлайн",
-  warning: "Предупреждение",
-  offline: "Оффлайн",
+  online: () => translate("status.online"),
+  warning: () => translate("status.warning"),
+  offline: () => translate("status.offline"),
 };
 
 const baseTopologyNodes = [
@@ -129,11 +363,11 @@ const buildDeviceTable = (rows, target) => {
   if (!target) return;
   target.innerHTML = `
     <div class="device-row header">
-      <span>Устройство</span>
+      <span>${translate("labels.device")}</span>
       <span>IP</span>
-      <span>Категория</span>
-      <span>Статус</span>
-      <span>Действия</span>
+      <span>${translate("labels.category")}</span>
+      <span>${translate("labels.status")}</span>
+      <span>${translate("labels.actions")}</span>
     </div>
   `;
 
@@ -144,11 +378,11 @@ const buildDeviceTable = (rows, target) => {
     row.innerHTML = `
       <span>${device.name}</span>
       <span>${device.ip}</span>
-      <span class="device-pill">${categoryLabels[device.category]}</span>
-      <span class="device-status ${statusClass}">${statusLabels[device.status]}</span>
+      <span class="device-pill">${categoryLabels[device.category]()}</span>
+      <span class="device-status ${statusClass}">${statusLabels[device.status]()}</span>
       <span class="device-actions">
-        <button class="ghost small" type="button">Ping</button>
-        <button class="ghost small" type="button">Редактировать</button>
+        <button class="ghost small" type="button">${translate("labels.ping")}</button>
+        <button class="ghost small" type="button">${translate("labels.edit")}</button>
       </span>
     `;
     target.appendChild(row);
@@ -172,10 +406,10 @@ const setActiveCategory = (category) => {
 };
 
 const typeLabels = {
-  core: "Core",
-  access: "Access",
-  voice: "Voice",
-  edge: "Edge",
+  core: () => translate("type.core"),
+  access: () => translate("type.access"),
+  voice: () => translate("type.voice"),
+  edge: () => translate("type.edge"),
 };
 
 const typeClass = (type) => {
@@ -262,7 +496,7 @@ const renderTopology = () => {
       row.className = "topology-node-row";
       row.innerHTML = `
         <span>${node.name}</span>
-        <span class="node-pill">${typeLabels[node.type]}</span>
+        <span class="node-pill">${typeLabels[node.type]()}</span>
         <span class="node-zone-label">${node.zone}</span>
       `;
       topologyNodeList.appendChild(row);
@@ -330,6 +564,53 @@ const syncLinkOptions = () => {
 
 const updateSelectedLinkType = (type) => {
   selectedLinkType = type;
+};
+
+const updateTopologyToggleLabels = () => {
+  if (topologyEditToggle) {
+    topologyEditToggle.textContent = isTopologyEditMode
+      ? translate("topology.editing")
+      : translate("topology.edit");
+  }
+  if (topologyLinkToggle) {
+    topologyLinkToggle.textContent = isTopologyLinkMode
+      ? translate("topology.linksOn")
+      : translate("topology.linksOff");
+  }
+};
+
+const applyTranslations = () => {
+  document.querySelectorAll("[data-i18n]").forEach((element) => {
+    const key = element.dataset.i18n;
+    element.textContent = translate(key);
+  });
+  document.querySelectorAll("[data-i18n-placeholder]").forEach((element) => {
+    const key = element.dataset.i18nPlaceholder;
+    element.setAttribute("placeholder", translate(key));
+  });
+  updateTopologyToggleLabels();
+  renderDeviceTable();
+  renderTopology();
+};
+
+const setTheme = (theme) => {
+  document.documentElement.dataset.theme = theme;
+  localStorage.setItem("theme", theme);
+  if (themeToggle) {
+    themeToggle.textContent =
+      theme === "light"
+        ? translate("sidebar.themeDark")
+        : translate("sidebar.themeLight");
+  }
+};
+
+const setLanguage = (language) => {
+  if (!translations[language]) return;
+  activeLanguage = language;
+  localStorage.setItem("language", language);
+  if (languageSelect) languageSelect.value = language;
+  applyTranslations();
+  setTheme(document.documentElement.dataset.theme || "dark");
 };
 
 const setActiveTopology = (key) => {
@@ -455,15 +736,10 @@ if (topologyEditToggle) {
       selectedLinkNodeId = null;
     }
     topologyEditToggle.classList.toggle("active", isTopologyEditMode);
-    topologyEditToggle.textContent = isTopologyEditMode
-      ? "Редактирование"
-      : "Редактировать";
     if (topologyLinkToggle) {
       topologyLinkToggle.classList.toggle("active", isTopologyLinkMode);
-      topologyLinkToggle.textContent = isTopologyLinkMode
-        ? "Линии: вкл"
-        : "Линии: выкл";
     }
+    updateTopologyToggleLabels();
     renderTopology();
   });
 }
@@ -511,9 +787,7 @@ if (topologyLinkToggle) {
       selectedLinkNodeId = null;
     }
     topologyLinkToggle.classList.toggle("active", isTopologyLinkMode);
-    topologyLinkToggle.textContent = isTopologyLinkMode
-      ? "Линии: вкл"
-      : "Линии: выкл";
+    updateTopologyToggleLabels();
     renderTopology();
   });
 }
@@ -536,6 +810,19 @@ topologyTabs.forEach((tab) => {
 if (topologyAreaSelect) {
   topologyAreaSelect.addEventListener("change", (event) => {
     setActiveTopology(event.target.value);
+  });
+}
+
+if (languageSelect) {
+  languageSelect.addEventListener("change", (event) => {
+    setLanguage(event.target.value);
+  });
+}
+
+if (themeToggle) {
+  themeToggle.addEventListener("click", () => {
+    const currentTheme = document.documentElement.dataset.theme || "dark";
+    setTheme(currentTheme === "dark" ? "light" : "dark");
   });
 }
 
@@ -573,9 +860,13 @@ const resolveSectionFromHash = () => {
 window.addEventListener("hashchange", resolveSectionFromHash);
 resolveSectionFromHash();
 
+const storedLanguage = localStorage.getItem("language");
+const storedTheme = localStorage.getItem("theme");
+setTheme(storedTheme || "dark");
+setLanguage(storedLanguage || "ru");
+
 updateTime();
 setInterval(updateTime, 1000 * 30);
 renderPingList();
 setInterval(renderPingList, 5000);
-renderDeviceTable();
 setActiveTopology(activeTopologyKey);

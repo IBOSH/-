@@ -15,26 +15,36 @@
       <div class="logo">
         <span class="logo-mark"></span>
         <div>
-          <p class="logo-title">Центр контроля</p>
-          <p class="logo-subtitle">Network Command</p>
+          <p class="logo-title" data-i18n="brand.title">Центр контроля</p>
+          <p class="logo-subtitle" data-i18n="brand.subtitle">Network Command</p>
         </div>
       </div>
       <nav class="nav">
-        <a class="nav-link active" href="#dashboard" data-section="dashboard">Дашборд</a>
-        <a class="nav-link" href="#network" data-section="network">Сеть</a>
-        <a class="nav-link" href="#topology" data-section="topology">Топология</a>
-        <a class="nav-link" href="#nodes" data-section="nodes">Узлы</a>
-        <a class="nav-link" href="#events" data-section="events">События</a>
-        <a class="nav-link" href="#reports" data-section="reports">Отчёты</a>
-        <a class="nav-link" href="#settings" data-section="settings">Настройки</a>
+        <a class="nav-link active" href="#dashboard" data-section="dashboard" data-i18n="nav.dashboard">Дашборд</a>
+        <a class="nav-link" href="#network" data-section="network" data-i18n="nav.network">Сеть</a>
+        <a class="nav-link" href="#topology" data-section="topology" data-i18n="nav.topology">Топология</a>
+        <a class="nav-link" href="#nodes" data-section="nodes" data-i18n="nav.nodes">Узлы</a>
+        <a class="nav-link" href="#events" data-section="events" data-i18n="nav.events">События</a>
+        <a class="nav-link" href="#reports" data-section="reports" data-i18n="nav.reports">Отчёты</a>
+        <a class="nav-link" href="#settings" data-section="settings" data-i18n="nav.settings">Настройки</a>
       </nav>
       <div class="sidebar-footer">
-        <p class="footer-label">Состояние агента</p>
+        <p class="footer-label" data-i18n="sidebar.statusLabel">Состояние агента</p>
         <div class="status">
           <span class="status-dot"></span>
-          Активен
+          <span data-i18n="sidebar.statusActive">Активен</span>
         </div>
         <p class="footer-time" id="local-time">--:--</p>
+        <div class="sidebar-controls">
+          <label class="control-label" for="language-select" data-i18n="sidebar.languageLabel">Язык</label>
+          <select id="language-select" class="ghost small" aria-label="Выбор языка">
+            <option value="ru">Русский</option>
+            <option value="uz">Oʻzbekcha</option>
+          </select>
+          <button class="ghost small" type="button" id="theme-toggle" data-i18n="sidebar.themeLight">
+            Светлая тема
+          </button>
+        </div>
       </div>
     </aside>
 
@@ -42,12 +52,12 @@
       <section class="page-section active" id="dashboard" data-section="dashboard">
         <header class="topbar">
           <div>
-          <p class="page-title">Центр контроля сети</p>
-          <p class="page-subtitle">250 коммутаторов • 600 IP-телефонов • живые пинги</p>
+          <p class="page-title" data-i18n="dashboard.title">Центр контроля сети</p>
+          <p class="page-subtitle" data-i18n="dashboard.subtitle">250 коммутаторов • 600 IP-телефонов • живые пинги</p>
           </div>
           <div class="topbar-actions">
-            <button class="ghost">Экспорт</button>
-            <button class="primary">Создать отчёт</button>
+            <button class="ghost" data-i18n="actions.export">Экспорт</button>
+            <button class="primary" data-i18n="actions.createReport">Создать отчёт</button>
           </div>
         </header>
 
@@ -91,15 +101,15 @@
 
         <section class="category-panel">
           <div>
-            <p class="card-title">Категории устройств</p>
-            <p class="card-subtitle">Переключайтесь между группами и добавляйте новые устройства</p>
+            <p class="card-title" data-i18n="categories.title">Категории устройств</p>
+            <p class="card-subtitle" data-i18n="categories.subtitle">Переключайтесь между группами и добавляйте новые устройства</p>
           </div>
           <div class="category-tabs" role="tablist" aria-label="Категории устройств">
-            <button class="tab active" type="button" data-category="all">Все</button>
-            <button class="tab" type="button" data-category="switch">Коммутаторы</button>
-            <button class="tab" type="button" data-category="phone">IP-телефоны</button>
-            <button class="tab" type="button" data-category="router">Маршрутизаторы</button>
-            <button class="tab" type="button" data-category="server">Серверы</button>
+            <button class="tab active" type="button" data-category="all" data-i18n="categories.all">Все</button>
+            <button class="tab" type="button" data-category="switch" data-i18n="categories.switch">Коммутаторы</button>
+            <button class="tab" type="button" data-category="phone" data-i18n="categories.phone">IP-телефоны</button>
+            <button class="tab" type="button" data-category="router" data-i18n="categories.router">Маршрутизаторы</button>
+            <button class="tab" type="button" data-category="server" data-i18n="categories.server">Серверы</button>
           </div>
         </section>
 
@@ -107,10 +117,10 @@
         <article class="card span-7">
           <div class="card-header">
             <div>
-              <p class="card-title">Трафик магистрали</p>
-              <p class="card-subtitle">Gbps, последние 12 часов</p>
+              <p class="card-title" data-i18n="traffic.title">Трафик магистрали</p>
+              <p class="card-subtitle" data-i18n="traffic.subtitle">Gbps, последние 12 часов</p>
             </div>
-            <span class="pill">Real-time</span>
+            <span class="pill" data-i18n="traffic.realtime">Real-time</span>
           </div>
           <div class="chart">
             <svg viewBox="0 0 640 220" preserveAspectRatio="none">
@@ -155,8 +165,8 @@
         <article class="card span-5">
           <div class="card-header">
             <div>
-              <p class="card-title">Инциденты по зонам</p>
-              <p class="card-subtitle">Текущие состояния</p>
+              <p class="card-title" data-i18n="incidents.title">Инциденты по зонам</p>
+              <p class="card-subtitle" data-i18n="incidents.subtitle">Текущие состояния</p>
             </div>
           </div>
           <div class="zone-list">
@@ -204,8 +214,8 @@
         <article class="card span-8">
           <div class="card-header">
             <div>
-              <p class="card-title">Топология нагрузки</p>
-              <p class="card-subtitle">Графическая карта коммутаторов</p>
+              <p class="card-title" data-i18n="topologyCard.title">Топология нагрузки</p>
+              <p class="card-subtitle" data-i18n="topologyCard.subtitle">Графическая карта коммутаторов</p>
             </div>
             <div class="topology-tabs" role="tablist" aria-label="Топологии РЖУ">
               <button class="topology-tab active" type="button" data-topology="rju-1">РЖУ-1</button>
@@ -240,8 +250,8 @@
         <article class="card span-4">
           <div class="card-header">
             <div>
-              <p class="card-title">Пинг критичных узлов</p>
-              <p class="card-subtitle">Живые пинги</p>
+              <p class="card-title" data-i18n="ping.title">Пинг критичных узлов</p>
+              <p class="card-subtitle" data-i18n="ping.subtitle">Живые пинги</p>
             </div>
           </div>
           <div class="ping-list" id="ping-list">
@@ -428,8 +438,8 @@
                 <p class="event-meta">Критично • 2 минуты назад</p>
               </div>
               <div class="event-actions">
-                <button class="ghost small">Диагностика</button>
-                <button class="primary small">Эскалация</button>
+                <button class="ghost small" data-i18n="actions.diagnostics">Диагностика</button>
+                <button class="primary small" data-i18n="actions.escalate">Эскалация</button>
               </div>
             </div>
             <div class="event-row">
@@ -439,8 +449,8 @@
                 <p class="event-meta">Предупреждение • 14 минут назад</p>
               </div>
               <div class="event-actions">
-                <button class="ghost small">План работ</button>
-                <button class="primary small">Создать тикет</button>
+                <button class="ghost small" data-i18n="actions.plan">План работ</button>
+                <button class="primary small" data-i18n="actions.createTicket">Создать тикет</button>
               </div>
             </div>
             <div class="event-row">
@@ -450,7 +460,7 @@
                 <p class="event-meta">Инфо • 35 минут назад</p>
               </div>
               <div class="event-actions">
-                <button class="ghost small">Подробнее</button>
+                <button class="ghost small" data-i18n="actions.details">Подробнее</button>
               </div>
             </div>
           </div>
@@ -461,18 +471,18 @@
       <section class="page-section" id="network" data-section="network">
         <header class="topbar">
           <div>
-            <p class="page-title">Сеть</p>
-            <p class="page-subtitle">Обзор каналов связи и сегментов</p>
+            <p class="page-title" data-i18n="network.title">Сеть</p>
+            <p class="page-subtitle" data-i18n="network.subtitle">Обзор каналов связи и сегментов</p>
           </div>
           <div class="topbar-actions">
-            <button class="ghost">Экспорт</button>
-            <button class="primary">Оптимизация</button>
+            <button class="ghost" data-i18n="actions.export">Экспорт</button>
+            <button class="primary" data-i18n="actions.optimize">Оптимизация</button>
           </div>
         </header>
         <div class="grid">
           <article class="card span-6">
-            <p class="card-title">Каналы ядра</p>
-            <p class="card-subtitle">Средняя загрузка 68%</p>
+            <p class="card-title" data-i18n="network.coreLinks">Каналы ядра</p>
+            <p class="card-subtitle" data-i18n="network.coreLinksSubtitle">Средняя загрузка 68%</p>
             <div class="link-grid">
               <div class="link-card">
                 <p>Core ↔ DC1</p>
@@ -487,12 +497,12 @@
             </div>
           </article>
           <article class="card span-6">
-            <p class="card-title">Карта сегментов</p>
-            <p class="card-subtitle">Core • Access • Voice</p>
+            <p class="card-title" data-i18n="network.segmentMap">Карта сегментов</p>
+            <p class="card-subtitle" data-i18n="network.segmentMapSubtitle">Core • Access • Voice</p>
             <div class="network-map">
               <div class="map-overlay">
-                <p>Сегменты: Core, Access, Voice</p>
-                <p>Активно: 14</p>
+                <p data-i18n="network.segmentOverlay">Сегменты: Core, Access, Voice</p>
+                <p data-i18n="network.segmentActive">Активно: 14</p>
               </div>
               <svg viewBox="0 0 720 200" preserveAspectRatio="none">
                 <rect width="720" height="200" fill="rgba(15, 23, 42, 0.4)" />
@@ -508,18 +518,18 @@
       <section class="page-section" id="nodes" data-section="nodes">
         <header class="topbar">
           <div>
-            <p class="page-title">Узлы</p>
-            <p class="page-subtitle">Список устройств и групп</p>
+            <p class="page-title" data-i18n="nodes.title">Узлы</p>
+            <p class="page-subtitle" data-i18n="nodes.subtitle">Список устройств и групп</p>
           </div>
           <div class="topbar-actions">
-            <button class="ghost">Импорт</button>
-            <button class="primary">Добавить узел</button>
+            <button class="ghost" data-i18n="actions.import">Импорт</button>
+            <button class="primary" data-i18n="actions.addNode">Добавить узел</button>
           </div>
         </header>
         <div class="grid">
           <article class="card span-12">
-            <p class="card-title">Инвентарь устройств</p>
-            <p class="card-subtitle">Доступно через таблицу на дашборде</p>
+            <p class="card-title" data-i18n="inventory.title">Инвентарь устройств</p>
+            <p class="card-subtitle" data-i18n="inventory.subtitle">Доступно через таблицу на дашборде</p>
             <div class="device-table" id="device-table-nodes"></div>
           </article>
         </div>
@@ -528,8 +538,8 @@
       <section class="page-section" id="topology" data-section="topology">
         <header class="topbar">
           <div>
-            <p class="page-title">Топология</p>
-            <p class="page-subtitle">Соберите схему сети и наблюдайте за связями</p>
+            <p class="page-title" data-i18n="topology.title">Топология</p>
+            <p class="page-subtitle" data-i18n="topology.subtitle">Соберите схему сети и наблюдайте за связями</p>
           </div>
           <div class="topbar-actions">
             <select class="ghost" id="topology-area-select" aria-label="Выбор зоны РЖУ">
@@ -540,26 +550,26 @@
               <option value="rju-5">РЖУ-5</option>
               <option value="rju-6">РЖУ-6</option>
             </select>
-            <button class="ghost" type="button">Импорт</button>
-            <button class="ghost" type="button" id="topology-edit-toggle">Редактировать</button>
-            <button class="ghost" type="button" id="topology-link-toggle">Линии: выкл</button>
-            <button class="ghost" type="button" id="topology-clear-links">Очистить линии</button>
-            <button class="primary" type="button">Сохранить схему</button>
+            <button class="ghost" type="button" data-i18n="actions.import">Импорт</button>
+            <button class="ghost" type="button" id="topology-edit-toggle" data-i18n="topology.edit">Редактировать</button>
+            <button class="ghost" type="button" id="topology-link-toggle" data-i18n="topology.linksOff">Линии: выкл</button>
+            <button class="ghost" type="button" id="topology-clear-links" data-i18n="topology.clearLinks">Очистить линии</button>
+            <button class="primary" type="button" data-i18n="topology.save">Сохранить схему</button>
           </div>
         </header>
         <div class="topology-layout">
           <aside class="topology-panel">
             <div>
-              <p class="card-title">Конструктор топологии</p>
-              <p class="card-subtitle">Добавляйте узлы и связи — данные сразу появятся на дашборде</p>
+              <p class="card-title" data-i18n="topology.builderTitle">Конструктор топологии</p>
+              <p class="card-subtitle" data-i18n="topology.builderSubtitle">Добавляйте узлы и связи — данные сразу появятся на дашборде</p>
             </div>
             <form class="topology-form" id="topology-node-form">
               <label>
-                Имя узла
-                <input type="text" name="name" placeholder="SW-###" required />
+                <span data-i18n="topology.nodeName">Имя узла</span>
+                <input type="text" name="name" placeholder="SW-###" required data-i18n-placeholder="topology.nodeNamePlaceholder" />
               </label>
               <label>
-                Тип устройства
+                <span data-i18n="topology.nodeType">Тип устройства</span>
                 <select name="type" required>
                   <option value="core">Core</option>
                   <option value="access">Access</option>
@@ -568,7 +578,7 @@
                 </select>
               </label>
               <label>
-                Зона
+                <span data-i18n="topology.nodeZone">Зона</span>
                 <select name="zone" required>
                   <option value="Moscow-DC1">Moscow-DC1</option>
                   <option value="Saint-Petersburg">Saint-Petersburg</option>
@@ -576,42 +586,42 @@
                   <option value="Berlin POP">Berlin POP</option>
                 </select>
               </label>
-              <button class="primary" type="submit">Добавить узел</button>
+              <button class="primary" type="submit" data-i18n="topology.addNode">Добавить узел</button>
             </form>
             <form class="topology-form" id="topology-link-form">
               <label>
-                Узел A
+                <span data-i18n="topology.nodeA">Узел A</span>
                 <select name="from" id="topology-link-from" required></select>
               </label>
               <label>
-                Узел B
+                <span data-i18n="topology.nodeB">Узел B</span>
                 <select name="to" id="topology-link-to" required></select>
               </label>
               <label>
-                Тип связи
+                <span data-i18n="topology.linkType">Тип связи</span>
                 <select name="linkType" required>
                   <option value="core">Core</option>
                   <option value="access">Access</option>
                   <option value="alert">Alert</option>
                 </select>
               </label>
-              <button class="ghost" type="submit">Добавить связь</button>
+              <button class="ghost" type="submit" data-i18n="topology.addLink">Добавить связь</button>
             </form>
             <div class="topology-hint">
-              <p class="hint-title">Быстрое соединение</p>
-              <p class="hint-text">Включите «Редактировать» и «Линии», кликните по двум узлам и выберите тип связи.</p>
+              <p class="hint-title" data-i18n="topology.hintTitle">Быстрое соединение</p>
+              <p class="hint-text" data-i18n="topology.hintText">Включите «Редактировать» и «Линии», кликните по двум узлам и выберите тип связи.</p>
             </div>
             <div class="topology-summary">
               <div>
-                <p class="summary-label">Узлов</p>
+                <p class="summary-label" data-i18n="topology.summaryNodes">Узлов</p>
                 <p class="summary-value" id="topology-node-count">--</p>
               </div>
               <div>
-                <p class="summary-label">Связей</p>
+                <p class="summary-label" data-i18n="topology.summaryLinks">Связей</p>
                 <p class="summary-value" id="topology-link-count">--</p>
               </div>
               <div>
-                <p class="summary-label">Зон</p>
+                <p class="summary-label" data-i18n="topology.summaryZones">Зон</p>
                 <p class="summary-value">4</p>
               </div>
             </div>
@@ -626,17 +636,17 @@
       <section class="page-section" id="events" data-section="events">
         <header class="topbar">
           <div>
-            <p class="page-title">События</p>
-            <p class="page-subtitle">Лента инцидентов и уведомлений</p>
+            <p class="page-title" data-i18n="events.title">События</p>
+            <p class="page-subtitle" data-i18n="events.subtitle">Лента инцидентов и уведомлений</p>
           </div>
           <div class="topbar-actions">
-            <button class="ghost">Фильтр</button>
-            <button class="primary">Экспорт CSV</button>
+            <button class="ghost" data-i18n="actions.filter">Фильтр</button>
+            <button class="primary" data-i18n="actions.exportCsv">Экспорт CSV</button>
           </div>
         </header>
         <div class="grid">
           <article class="card span-12">
-            <p class="card-title">Инциденты за 24 часа</p>
+            <p class="card-title" data-i18n="events.recentTitle">Инциденты за 24 часа</p>
             <div class="event-table">
               <div class="event-row">
                 <div class="event-indicator danger"></div>
@@ -668,12 +678,12 @@
       <section class="page-section" id="reports" data-section="reports">
         <header class="topbar">
           <div>
-            <p class="page-title">Отчёты</p>
-            <p class="page-subtitle">Подготовка аналитики и отчётности</p>
+            <p class="page-title" data-i18n="reports.title">Отчёты</p>
+            <p class="page-subtitle" data-i18n="reports.subtitle">Подготовка аналитики и отчётности</p>
           </div>
           <div class="topbar-actions">
-            <button class="ghost">Шаблоны</button>
-            <button class="primary">Создать отчёт</button>
+            <button class="ghost" data-i18n="actions.templates">Шаблоны</button>
+            <button class="primary" data-i18n="actions.createReport">Создать отчёт</button>
           </div>
         </header>
         <div class="grid">
@@ -709,12 +719,12 @@
       <section class="page-section" id="settings" data-section="settings">
         <header class="topbar">
           <div>
-            <p class="page-title">Настройки</p>
-            <p class="page-subtitle">Параметры мониторинга и интеграций</p>
+            <p class="page-title" data-i18n="settings.title">Настройки</p>
+            <p class="page-subtitle" data-i18n="settings.subtitle">Параметры мониторинга и интеграций</p>
           </div>
           <div class="topbar-actions">
-            <button class="ghost">Сброс</button>
-            <button class="primary">Сохранить</button>
+            <button class="ghost" data-i18n="actions.reset">Сброс</button>
+            <button class="primary" data-i18n="actions.save">Сохранить</button>
           </div>
         </header>
         <div class="grid">
@@ -727,7 +737,7 @@
               <span>Интервал: 30 сек</span>
               <span>Уровень: v2c</span>
               <span class="device-actions">
-                <button class="ghost small" type="button">Настроить</button>
+                <button class="ghost small" type="button" data-i18n="actions.configure">Настроить</button>
               </span>
             </div>
             <div class="device-row">
@@ -736,7 +746,7 @@
               <span>Поток: 3.2k/s</span>
               <span>Бэкап: активен</span>
               <span class="device-actions">
-                <button class="ghost small" type="button">Настроить</button>
+                <button class="ghost small" type="button" data-i18n="actions.configure">Настроить</button>
               </span>
             </div>
           </article>

@@ -12,6 +12,20 @@
   --danger: #f87171;
 }
 
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg: #f5f7fb;
+  --panel: #ffffff;
+  --panel-light: #eef2f7;
+  --panel-strong: #e5eaf3;
+  --text: #0f172a;
+  --muted: #475569;
+  --accent: #2563eb;
+  --success: #16a34a;
+  --warning: #d97706;
+  --danger: #dc2626;
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -23,6 +37,10 @@ body {
   background: radial-gradient(circle at top, #1f2a44, var(--bg));
   color: var(--text);
   min-height: 100vh;
+}
+
+:root[data-theme="light"] body {
+  background: radial-gradient(circle at top, #ffffff, var(--bg));
 }
 
 .app {
@@ -38,6 +56,11 @@ body {
   display: flex;
   flex-direction: column;
   gap: 32px;
+}
+
+:root[data-theme="light"] .sidebar {
+  background: rgba(248, 250, 252, 0.98);
+  border-right: 1px solid rgba(15, 23, 42, 0.08);
 }
 
 .logo {
@@ -103,6 +126,25 @@ body {
   padding: 16px;
   background: var(--panel-light);
   border-radius: 16px;
+}
+
+.sidebar-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.control-label {
+  font-size: 11px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+.sidebar-controls select,
+.sidebar-controls button {
+  width: 100%;
 }
 
 .footer-label {
@@ -197,6 +239,10 @@ button.primary {
 
 button.ghost {
   background: rgba(255, 255, 255, 0.08);
+}
+
+:root[data-theme="light"] button.ghost {
+  background: rgba(15, 23, 42, 0.06);
 }
 
 select.ghost {
@@ -522,6 +568,11 @@ button.small {
   border-radius: 999px;
   cursor: pointer;
   transition: all 0.2s ease;
+}
+
+:root[data-theme="light"] .topology-tab {
+  background: rgba(15, 23, 42, 0.04);
+  border-color: rgba(37, 99, 235, 0.25);
 }
 
 .topology-tab:hover {

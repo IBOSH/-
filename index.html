@@ -87,6 +87,20 @@
         </article>
       </section>
 
+      <section class="category-panel">
+        <div>
+          <p class="card-title">Категории устройств</p>
+          <p class="card-subtitle">Переключайтесь между группами и добавляйте новые устройства</p>
+        </div>
+        <div class="category-tabs" role="tablist" aria-label="Категории устройств">
+          <button class="tab active" type="button" data-category="all">Все</button>
+          <button class="tab" type="button" data-category="switch">Коммутаторы</button>
+          <button class="tab" type="button" data-category="phone">IP-телефоны</button>
+          <button class="tab" type="button" data-category="router">Маршрутизаторы</button>
+          <button class="tab" type="button" data-category="server">Серверы</button>
+        </div>
+      </section>
+
       <section class="grid">
         <article class="card span-7">
           <div class="card-header">
@@ -287,6 +301,35 @@
             </svg>
             <p class="sparkline-label">Средний пинг узлов: 19 мс</p>
           </div>
+        </article>
+
+        <article class="card span-12">
+          <div class="card-header">
+            <div>
+              <p class="card-title">Перечень устройств</p>
+              <p class="card-subtitle">Добавляйте новые узлы и фильтруйте по категории</p>
+            </div>
+            <span class="pill">Inventory</span>
+          </div>
+          <form class="device-form" id="device-form">
+            <input type="text" name="name" placeholder="Имя устройства" required />
+            <input type="text" name="ip" placeholder="IP-адрес" required />
+            <select name="category" required>
+              <option value="">Категория</option>
+              <option value="switch">Коммутатор</option>
+              <option value="phone">IP-телефон</option>
+              <option value="router">Маршрутизатор</option>
+              <option value="server">Сервер</option>
+            </select>
+            <select name="status" required>
+              <option value="">Статус</option>
+              <option value="online">Онлайн</option>
+              <option value="warning">Предупреждение</option>
+              <option value="offline">Оффлайн</option>
+            </select>
+            <button class="primary" type="submit">Добавить устройство</button>
+          </form>
+          <div class="device-table" id="device-table" aria-live="polite"></div>
         </article>
 
         <article class="card span-6">

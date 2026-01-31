@@ -132,7 +132,9 @@ body {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  margin-top: 6px;
+  padding: 16px;
+  background: var(--panel-light);
+  border-radius: 16px;
 }
 
 .control-label {

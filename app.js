@@ -159,17 +159,25 @@ navLinks.forEach((link) => {
     const sectionId = link.dataset.section;
     if (!sectionId) return;
     event.preventDefault();
-    history.replaceState(null, "", link.getAttribute("href"));
-    setActiveSection(sectionId);
+    window.location.hash = sectionId;
   });
 });
 
-const initialHash = window.location.hash.replace("#", "");
-const knownSections = Array.from(sections).map((section) => section.dataset.section);
-const initialSection = knownSections.includes(initialHash)
-  ? initialHash
-  : "dashboard";
-setActiveSection(initialSection);
+const knownSections = Array.from(sections).map(
+  (section) => section.dataset.section
+);
+
+const resolveSectionFromHash = () => {
+  const hash = window.location.hash.replace("#", "");
+  if (knownSections.includes(hash)) {
+    setActiveSection(hash);
+    return;
+  }
+  setActiveSection("dashboard");
+};
+
+window.addEventListener("hashchange", resolveSectionFromHash);
+resolveSectionFromHash();
 
 updateTime();
 setInterval(updateTime, 1000 * 30);

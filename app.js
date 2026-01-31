@@ -16,6 +16,7 @@ const topologyLinkCount = document.getElementById("topology-link-count");
 const topologyLinkFrom = document.getElementById("topology-link-from");
 const topologyLinkTo = document.getElementById("topology-link-to");
 const topologyEditToggle = document.getElementById("topology-edit-toggle");
+const topologyLinkToggle = document.getElementById("topology-link-toggle");
 const topologyStageLayers = new Map();
 
 const formatTime = (date) =>
@@ -104,6 +105,7 @@ const topologyLinks = [
 
 let activeCategory = "all";
 let isTopologyEditMode = false;
+let isTopologyLinkMode = false;
 let selectedLinkNodeId = null;
 let selectedLinkType = "core";
 
@@ -408,19 +410,26 @@ if (topologyEditToggle) {
   topologyEditToggle.addEventListener("click", () => {
     isTopologyEditMode = !isTopologyEditMode;
     if (!isTopologyEditMode) {
+      isTopologyLinkMode = false;
       selectedLinkNodeId = null;
     }
     topologyEditToggle.classList.toggle("active", isTopologyEditMode);
     topologyEditToggle.textContent = isTopologyEditMode
       ? "Редактирование"
       : "Редактировать";
+    if (topologyLinkToggle) {
+      topologyLinkToggle.classList.toggle("active", isTopologyLinkMode);
+      topologyLinkToggle.textContent = isTopologyLinkMode
+        ? "Линии: вкл"
+        : "Линии: выкл";
+    }
     renderTopology();
   });
 }
 
 if (topologyStage) {
   topologyStage.addEventListener("click", (event) => {
-    if (!isTopologyEditMode) return;
+    if (!isTopologyEditMode || !isTopologyLinkMode) return;
     const nodeEl = event.target.closest(".topology-node");
     if (!nodeEl) return;
     const nodeId = nodeEl.dataset.id;
@@ -449,6 +458,21 @@ if (topologyLinkForm) {
   topologyLinkForm.addEventListener("change", (event) => {
     if (event.target.name !== "linkType") return;
     updateSelectedLinkType(event.target.value);
+  });
+}
+
+if (topologyLinkToggle) {
+  topologyLinkToggle.addEventListener("click", () => {
+    if (!isTopologyEditMode) return;
+    isTopologyLinkMode = !isTopologyLinkMode;
+    if (!isTopologyLinkMode) {
+      selectedLinkNodeId = null;
+    }
+    topologyLinkToggle.classList.toggle("active", isTopologyLinkMode);
+    topologyLinkToggle.textContent = isTopologyLinkMode
+      ? "Линии: вкл"
+      : "Линии: выкл";
+    renderTopology();
   });
 }
 

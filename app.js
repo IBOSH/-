@@ -17,6 +17,7 @@ const topologyLinkFrom = document.getElementById("topology-link-from");
 const topologyLinkTo = document.getElementById("topology-link-to");
 const topologyEditToggle = document.getElementById("topology-edit-toggle");
 const topologyLinkToggle = document.getElementById("topology-link-toggle");
+const topologyClearLinks = document.getElementById("topology-clear-links");
 const topologyStageLayers = new Map();
 
 const formatTime = (date) =>
@@ -466,6 +467,14 @@ if (topologyLinkToggle) {
     topologyLinkToggle.textContent = isTopologyLinkMode
       ? "Линии: вкл"
       : "Линии: выкл";
+    renderTopology();
+  });
+}
+
+if (topologyClearLinks) {
+  topologyClearLinks.addEventListener("click", () => {
+    topologyLinks.length = 0;
+    selectedLinkNodeId = null;
     renderTopology();
   });
 }

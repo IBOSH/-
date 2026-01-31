@@ -618,6 +618,7 @@ button.small {
 
 .topology-stage {
   min-height: 620px;
+  height: 100%;
   background: radial-gradient(circle at top, rgba(15, 23, 42, 0.85), rgba(15, 23, 42, 0.55));
 }
 
@@ -744,6 +745,7 @@ button.small {
   display: grid;
   grid-template-columns: minmax(280px, 320px) minmax(0, 1fr);
   gap: 24px;
+  align-items: stretch;
 }
 
 .topology-panel {
@@ -829,6 +831,7 @@ button.small {
   display: flex;
   flex-direction: column;
   gap: 16px;
+  min-height: 680px;
 }
 
 .voice-chart {

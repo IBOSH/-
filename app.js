@@ -7,6 +7,8 @@ const categoryTabs = document.querySelectorAll(".tab");
 const navLinks = document.querySelectorAll(".nav-link");
 const sections = document.querySelectorAll(".page-section");
 const dashboardTopology = document.getElementById("dashboard-topology");
+const topologyTabs = document.querySelectorAll(".topology-tab");
+const topologyAreaSelect = document.getElementById("topology-area-select");
 const topologyStage = document.getElementById("topology-stage");
 const topologyNodeForm = document.getElementById("topology-node-form");
 const topologyLinkForm = document.getElementById("topology-link-form");
@@ -87,7 +89,7 @@ const statusLabels = {
   offline: "Оффлайн",
 };
 
-const topologyNodes = [
+const baseTopologyNodes = [
   { id: "core-sw", name: "CORE-SW", type: "core", zone: "Moscow-DC1", x: 50, y: 14 },
   { id: "sw-101", name: "SW-101", type: "access", zone: "Moscow-DC1", x: 18, y: 48 },
   { id: "sw-205", name: "SW-205", type: "access", zone: "Moscow-DC1", x: 82, y: 48 },
@@ -96,9 +98,28 @@ const topologyNodes = [
   { id: "sw-041", name: "SW-041", type: "access", zone: "Almaty Edge", x: 8, y: 78 },
 ];
 
-const topologyLinks = [];
+const clampPercent = (value, min = 6, max = 94) =>
+  Math.min(max, Math.max(min, value));
+
+const buildTopologyNodes = (suffix, offsetX, offsetY) =>
+  baseTopologyNodes.map((node) => ({
+    ...node,
+    id: `${node.id}-${suffix}`,
+    x: clampPercent(node.x + offsetX),
+    y: clampPercent(node.y + offsetY, 8, 92),
+  }));
+
+const topologyData = {
+  "rju-1": { label: "РЖУ-1", nodes: buildTopologyNodes("rju-1", 0, 0), links: [] },
+  "rju-2": { label: "РЖУ-2", nodes: buildTopologyNodes("rju-2", -6, 4), links: [] },
+  "rju-3": { label: "РЖУ-3", nodes: buildTopologyNodes("rju-3", 4, -6), links: [] },
+  "rju-4": { label: "РЖУ-4", nodes: buildTopologyNodes("rju-4", -10, -2), links: [] },
+  "rju-5": { label: "РЖУ-5", nodes: buildTopologyNodes("rju-5", 8, 6), links: [] },
+  "rju-6": { label: "РЖУ-6", nodes: buildTopologyNodes("rju-6", 2, 10), links: [] },
+};
 
 let activeCategory = "all";
+let activeTopologyKey = "rju-1";
 let isTopologyEditMode = false;
 let isTopologyLinkMode = false;
 let selectedLinkNodeId = null;
@@ -164,8 +185,14 @@ const typeClass = (type) => {
   return "node-access";
 };
 
+const getActiveTopology = () => topologyData[activeTopologyKey];
+const getActiveNodes = () => getActiveTopology().nodes;
+const getActiveLinks = () => getActiveTopology().links;
+
 const renderTopology = () => {
   if (!dashboardTopology || !topologyStage) return;
+  const topologyNodes = getActiveNodes();
+  const topologyLinks = getActiveLinks();
 
   const renderStage = (target, isInteractive) => {
     target.innerHTML = "";
@@ -249,6 +276,8 @@ const renderTopology = () => {
 const rebuildLinksForStage = (target) => {
   const layers = topologyStageLayers.get(target);
   if (!layers) return;
+  const topologyNodes = getActiveNodes();
+  const topologyLinks = getActiveLinks();
   layers.linksLayer.innerHTML = "";
   topologyLinks.forEach((link) => {
     const from = topologyNodes.find((node) => node.id === link.from);
@@ -271,6 +300,7 @@ const rebuildLinksForStage = (target) => {
 };
 
 const updateNodePositions = (nodeId) => {
+  const topologyNodes = getActiveNodes();
   const node = topologyNodes.find((item) => item.id === nodeId);
   if (!node) return;
   [dashboardTopology, topologyStage].forEach((target) => {
@@ -284,6 +314,7 @@ const updateNodePositions = (nodeId) => {
 
 const syncLinkOptions = () => {
   if (!topologyLinkFrom || !topologyLinkTo) return;
+  const topologyNodes = getActiveNodes();
   const buildOptions = (select) => {
     select.innerHTML = "";
     topologyNodes.forEach((node) => {
@@ -299,6 +330,18 @@ const syncLinkOptions = () => {
 
 const updateSelectedLinkType = (type) => {
   selectedLinkType = type;
+};
+
+const setActiveTopology = (key) => {
+  if (!topologyData[key]) return;
+  activeTopologyKey = key;
+  selectedLinkNodeId = null;
+  topologyTabs.forEach((tab) => {
+    tab.classList.toggle("active", tab.dataset.topology === key);
+  });
+  if (topologyAreaSelect) topologyAreaSelect.value = key;
+  syncLinkOptions();
+  renderTopology();
 };
 
 categoryTabs.forEach((tab) => {
@@ -327,6 +370,7 @@ if (deviceForm) {
 if (topologyNodeForm) {
   topologyNodeForm.addEventListener("submit", (event) => {
     event.preventDefault();
+    const topologyNodes = getActiveNodes();
     const formData = new FormData(topologyNodeForm);
     const name = formData.get("name").trim();
     const type = formData.get("type");
@@ -345,6 +389,7 @@ if (topologyNodeForm) {
 if (topologyLinkForm) {
   topologyLinkForm.addEventListener("submit", (event) => {
     event.preventDefault();
+    const topologyLinks = getActiveLinks();
     const formData = new FormData(topologyLinkForm);
     const from = formData.get("from");
     const to = formData.get("to");
@@ -369,6 +414,7 @@ if (topologyStage) {
     const bounds = topologyStage.getBoundingClientRect();
     const xPercent = ((event.clientX - bounds.left) / bounds.width) * 100;
     const yPercent = ((event.clientY - bounds.top) / bounds.height) * 100;
+    const topologyNodes = getActiveNodes();
     const node = topologyNodes.find((item) => item.id === activeDragId);
     if (!node) return;
     node.x = clamp(xPercent, 6, 94);
@@ -438,6 +484,7 @@ if (topologyStage) {
       renderTopology();
       return;
     }
+    const topologyLinks = getActiveLinks();
     topologyLinks.push({
       from: selectedLinkNodeId,
       to: nodeId,
@@ -473,9 +520,22 @@ if (topologyLinkToggle) {
 
 if (topologyClearLinks) {
   topologyClearLinks.addEventListener("click", () => {
+    const topologyLinks = getActiveLinks();
     topologyLinks.length = 0;
     selectedLinkNodeId = null;
     renderTopology();
+  });
+}
+
+topologyTabs.forEach((tab) => {
+  tab.addEventListener("click", () => {
+    setActiveTopology(tab.dataset.topology);
+  });
+});
+
+if (topologyAreaSelect) {
+  topologyAreaSelect.addEventListener("change", (event) => {
+    setActiveTopology(event.target.value);
   });
 }
 
@@ -518,5 +578,4 @@ setInterval(updateTime, 1000 * 30);
 renderPingList();
 setInterval(renderPingList, 5000);
 renderDeviceTable();
-syncLinkOptions();
-renderTopology();
+setActiveTopology(activeTopologyKey);

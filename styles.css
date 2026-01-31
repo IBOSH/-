@@ -199,6 +199,20 @@ button.ghost {
   background: rgba(255, 255, 255, 0.08);
 }
 
+select.ghost {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.06);
+  color: inherit;
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-weight: 600;
+}
+
+select.ghost:focus {
+  outline: 2px solid rgba(96, 165, 250, 0.4);
+  outline-offset: 2px;
+}
+
 button.small {
   padding: 8px 12px;
   font-size: 12px;
@@ -490,6 +504,36 @@ button.small {
   border-radius: 16px;
   padding: 12px;
   border: 1px solid rgba(96, 165, 250, 0.15);
+}
+
+.topology-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.topology-tab {
+  border: 1px solid rgba(96, 165, 250, 0.2);
+  background: rgba(15, 23, 42, 0.6);
+  color: var(--muted);
+  padding: 6px 10px;
+  font-size: 11px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.topology-tab:hover {
+  color: #e2e8f0;
+  border-color: rgba(96, 165, 250, 0.45);
+}
+
+.topology-tab.active {
+  color: #e2e8f0;
+  background: rgba(59, 130, 246, 0.2);
+  border-color: rgba(96, 165, 250, 0.6);
+  box-shadow: 0 0 0 1px rgba(96, 165, 250, 0.2);
 }
 
 .topology-graph svg {

@@ -15,6 +15,7 @@ const topologyNodeCount = document.getElementById("topology-node-count");
 const topologyLinkCount = document.getElementById("topology-link-count");
 const topologyLinkFrom = document.getElementById("topology-link-from");
 const topologyLinkTo = document.getElementById("topology-link-to");
+const topologyEditToggle = document.getElementById("topology-edit-toggle");
 const topologyStageLayers = new Map();
 
 const formatTime = (date) =>
@@ -102,6 +103,9 @@ const topologyLinks = [
 ];
 
 let activeCategory = "all";
+let isTopologyEditMode = false;
+let selectedLinkNodeId = null;
+let selectedLinkType = "core";
 
 const buildDeviceTable = (rows, target) => {
   if (!target) return;
@@ -203,7 +207,13 @@ const renderTopology = () => {
     topologyNodes.forEach((node) => {
       const card = document.createElement("div");
       card.className = `topology-node ${typeClass(node.type)}`;
-      if (isInteractive) card.classList.add("is-draggable");
+      if (isInteractive) {
+        card.classList.add("is-interactive");
+        if (isTopologyEditMode) card.classList.add("is-draggable");
+        if (selectedLinkNodeId === node.id) {
+          card.classList.add("is-selected");
+        }
+      }
       card.dataset.id = node.id;
       card.style.left = `${node.x}%`;
       card.style.top = `${node.y}%`;
@@ -290,6 +300,10 @@ const syncLinkOptions = () => {
   buildOptions(topologyLinkTo);
 };
 
+const updateSelectedLinkType = (type) => {
+  selectedLinkType = type;
+};
+
 categoryTabs.forEach((tab) => {
   tab.addEventListener("click", () => {
     setActiveCategory(tab.dataset.category);
@@ -338,6 +352,7 @@ if (topologyLinkForm) {
     const from = formData.get("from");
     const to = formData.get("to");
     const type = formData.get("linkType");
+    updateSelectedLinkType(type);
     if (!from || !to || from === to) return;
     topologyLinks.push({ from, to, type });
     topologyLinkForm.reset();
@@ -377,6 +392,7 @@ if (topologyStage) {
   topologyStage.addEventListener("pointerdown", (event) => {
     const nodeEl = event.target.closest(".topology-node");
     if (!nodeEl) return;
+    if (!isTopologyEditMode) return;
     event.preventDefault();
     activeDragId = nodeEl.dataset.id;
     activePointerId = event.pointerId;
@@ -386,6 +402,54 @@ if (topologyStage) {
   });
 
   topologyStage.addEventListener("pointerleave", stopDrag);
+}
+
+if (topologyEditToggle) {
+  topologyEditToggle.addEventListener("click", () => {
+    isTopologyEditMode = !isTopologyEditMode;
+    if (!isTopologyEditMode) {
+      selectedLinkNodeId = null;
+    }
+    topologyEditToggle.classList.toggle("active", isTopologyEditMode);
+    topologyEditToggle.textContent = isTopologyEditMode
+      ? "Редактирование"
+      : "Редактировать";
+    renderTopology();
+  });
+}
+
+if (topologyStage) {
+  topologyStage.addEventListener("click", (event) => {
+    if (!isTopologyEditMode) return;
+    const nodeEl = event.target.closest(".topology-node");
+    if (!nodeEl) return;
+    const nodeId = nodeEl.dataset.id;
+    if (!selectedLinkNodeId) {
+      selectedLinkNodeId = nodeId;
+      renderTopology();
+      return;
+    }
+    if (selectedLinkNodeId === nodeId) {
+      selectedLinkNodeId = null;
+      renderTopology();
+      return;
+    }
+    topologyLinks.push({
+      from: selectedLinkNodeId,
+      to: nodeId,
+      type: selectedLinkType,
+    });
+    selectedLinkNodeId = null;
+    syncLinkOptions();
+    renderTopology();
+  });
+}
+
+if (topologyLinkForm) {
+  topologyLinkForm.addEventListener("change", (event) => {
+    if (event.target.name !== "linkType") return;
+    updateSelectedLinkType(event.target.value);
+  });
 }
 
 const setActiveSection = (sectionId) => {

@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NetWatch | Мониторинг сети</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="logo">
+        <span class="logo-mark"></span>
+        <div>
+          <p class="logo-title">NetWatch</p>
+          <p class="logo-subtitle">Zabbix-style</p>
+        </div>
+      </div>
+      <nav class="nav">
+        <a class="nav-link active" href="#">Дашборд</a>
+        <a class="nav-link" href="#">Сеть</a>
+        <a class="nav-link" href="#">Узлы</a>
+        <a class="nav-link" href="#">События</a>
+        <a class="nav-link" href="#">Отчёты</a>
+        <a class="nav-link" href="#">Настройки</a>
+      </nav>
+      <div class="sidebar-footer">
+        <p class="footer-label">Состояние агента</p>
+        <div class="status">
+          <span class="status-dot"></span>
+          Активен
+        </div>
+        <p class="footer-time" id="local-time">--:--</p>
+      </div>
+    </aside>
+
+    <main class="content">
+      <header class="topbar">
+        <div>
+          <p class="page-title">Сводка сети</p>
+          <p class="page-subtitle">Производительность инфраструктуры за последние 24 часа</p>
+        </div>
+        <div class="topbar-actions">
+          <button class="ghost">Экспорт</button>
+          <button class="primary">Создать отчёт</button>
+        </div>
+      </header>
+
+      <section class="kpi-grid">
+        <article class="kpi-card">
+          <p class="kpi-title">Доступность</p>
+          <p class="kpi-value">99.98%</p>
+          <p class="kpi-meta success">+0.03% к вчера</p>
+        </article>
+        <article class="kpi-card">
+          <p class="kpi-title">Средняя задержка</p>
+          <p class="kpi-value">18 мс</p>
+          <p class="kpi-meta warning">+2 мс к вчера</p>
+        </article>
+        <article class="kpi-card">
+          <p class="kpi-title">Потеря пакетов</p>
+          <p class="kpi-value">0.12%</p>
+          <p class="kpi-meta success">-0.05% к вчера</p>
+        </article>
+        <article class="kpi-card">
+          <p class="kpi-title">Инциденты</p>
+          <p class="kpi-value">3</p>
+          <p class="kpi-meta danger">2 критичных</p>
+        </article>
+      </section>
+
+      <section class="grid">
+        <article class="card span-7">
+          <div class="card-header">
+            <div>
+              <p class="card-title">Трафик магистрали</p>
+              <p class="card-subtitle">Gbps, последние 12 часов</p>
+            </div>
+            <span class="pill">Real-time</span>
+          </div>
+          <div class="chart">
+            <svg viewBox="0 0 640 220" preserveAspectRatio="none">
+              <defs>
+                <linearGradient id="traffic" x1="0" x2="0" y1="0" y2="1">
+                  <stop offset="0%" stop-color="#60a5fa" stop-opacity="0.5" />
+                  <stop offset="100%" stop-color="#60a5fa" stop-opacity="0" />
+                </linearGradient>
+              </defs>
+              <path
+                d="M0 180 C 60 150, 120 120, 180 130 C 240 140, 300 80, 360 90 C 420 100, 480 60, 540 70 C 600 80, 640 40, 640 40 L 640 220 L 0 220 Z"
+                fill="url(#traffic)"
+              />
+              <path
+                d="M0 180 C 60 150, 120 120, 180 130 C 240 140, 300 80, 360 90 C 420 100, 480 60, 540 70 C 600 80, 640 40, 640 40"
+                fill="none"
+                stroke="#60a5fa"
+                stroke-width="3"
+              />
+            </svg>
+          </div>
+          <div class="legend">
+            <div>
+              <span class="dot blue"></span>
+              Входящий: 6.4 Gbps
+            </div>
+            <div>
+              <span class="dot teal"></span>
+              Исходящий: 5.9 Gbps
+            </div>
+          </div>
+        </article>
+
+        <article class="card span-5">
+          <div class="card-header">
+            <div>
+              <p class="card-title">Инциденты по зонам</p>
+              <p class="card-subtitle">Текущие состояния</p>
+            </div>
+          </div>
+          <div class="zone-list">
+            <div class="zone">
+              <div>
+                <p class="zone-title">Moscow-DC1</p>
+                <p class="zone-meta">134 узла • 1 критичный</p>
+              </div>
+              <span class="badge danger">Critical</span>
+            </div>
+            <div class="zone">
+              <div>
+                <p class="zone-title">Saint-Petersburg</p>
+                <p class="zone-meta">98 узлов • 0 критичных</p>
+              </div>
+              <span class="badge success">Stable</span>
+            </div>
+            <div class="zone">
+              <div>
+                <p class="zone-title">Almaty Edge</p>
+                <p class="zone-meta">62 узла • 1 предупреждение</p>
+              </div>
+              <span class="badge warning">Degraded</span>
+            </div>
+            <div class="zone">
+              <div>
+                <p class="zone-title">Berlin POP</p>
+                <p class="zone-meta">47 узлов • 1 критичный</p>
+              </div>
+              <span class="badge danger">Critical</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="card span-8">
+          <div class="card-header">
+            <div>
+              <p class="card-title">Топология нагрузки</p>
+              <p class="card-subtitle">Кластеры и задержки</p>
+            </div>
+          </div>
+          <div class="topology">
+            <div class="node core">Core</div>
+            <div class="node edge">Edge West</div>
+            <div class="node edge">Edge East</div>
+            <div class="node edge">Edge South</div>
+            <div class="node edge">Edge North</div>
+            <div class="connector"></div>
+          </div>
+          <div class="latency-grid">
+            <div>
+              <p class="latency-title">Core ↔ West</p>
+              <p class="latency-value">12 мс</p>
+            </div>
+            <div>
+              <p class="latency-title">Core ↔ East</p>
+              <p class="latency-value">19 мс</p>
+            </div>
+            <div>
+              <p class="latency-title">Core ↔ South</p>
+              <p class="latency-value">23 мс</p>
+            </div>
+            <div>
+              <p class="latency-title">Core ↔ North</p>
+              <p class="latency-value">16 мс</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="card span-4">
+          <div class="card-header">
+            <div>
+              <p class="card-title">Пинг критичных узлов</p>
+              <p class="card-subtitle">За последние 5 минут</p>
+            </div>
+          </div>
+          <div class="ping-list">
+            <div class="ping-item">
+              <span>gw-core-01</span>
+              <span class="pill success">14 мс</span>
+            </div>
+            <div class="ping-item">
+              <span>db-edge-04</span>
+              <span class="pill warning">33 мс</span>
+            </div>
+            <div class="ping-item">
+              <span>api-core-07</span>
+              <span class="pill success">18 мс</span>
+            </div>
+            <div class="ping-item">
+              <span>vpn-gw-02</span>
+              <span class="pill danger">timeout</span>
+            </div>
+            <div class="ping-item">
+              <span>cdn-edge-11</span>
+              <span class="pill success">21 мс</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="card span-12">
+          <div class="card-header">
+            <div>
+              <p class="card-title">Последние события</p>
+              <p class="card-subtitle">Уведомления и рекомендации</p>
+            </div>
+            <button class="ghost">Фильтр</button>
+          </div>
+          <div class="event-table">
+            <div class="event-row">
+              <div class="event-indicator danger"></div>
+              <div>
+                <p class="event-title">Timeout на vpn-gw-02</p>
+                <p class="event-meta">Критично • 2 минуты назад</p>
+              </div>
+              <div class="event-actions">
+                <button class="ghost small">Диагностика</button>
+                <button class="primary small">Эскалация</button>
+              </div>
+            </div>
+            <div class="event-row">
+              <div class="event-indicator warning"></div>
+              <div>
+                <p class="event-title">Повышенная задержка Berlin POP</p>
+                <p class="event-meta">Предупреждение • 14 минут назад</p>
+              </div>
+              <div class="event-actions">
+                <button class="ghost small">План работ</button>
+                <button class="primary small">Создать тикет</button>
+              </div>
+            </div>
+            <div class="event-row">
+              <div class="event-indicator success"></div>
+              <div>
+                <p class="event-title">Резервная линия активирована</p>
+                <p class="event-meta">Инфо • 35 минут назад</p>
+              </div>
+              <div class="event-actions">
+                <button class="ghost small">Подробнее</button>
+              </div>
+            </div>
+          </div>
+        </article>
+      </section>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

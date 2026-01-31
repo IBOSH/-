@@ -177,28 +177,28 @@
           <div class="zone-list">
             <div class="zone">
               <div>
-                <p class="zone-title">Moscow-DC1</p>
+                <p class="zone-title">РЖУ-1</p>
                 <p class="zone-meta">134 узла • 1 критичный</p>
               </div>
               <span class="badge danger">Critical</span>
             </div>
             <div class="zone">
               <div>
-                <p class="zone-title">Saint-Petersburg</p>
+                <p class="zone-title">РЖУ-2</p>
                 <p class="zone-meta">98 узлов • 0 критичных</p>
               </div>
               <span class="badge success">Stable</span>
             </div>
             <div class="zone">
               <div>
-                <p class="zone-title">Almaty Edge</p>
+                <p class="zone-title">РЖУ-3</p>
                 <p class="zone-meta">62 узла • 1 предупреждение</p>
               </div>
               <span class="badge warning">Degraded</span>
             </div>
             <div class="zone">
               <div>
-                <p class="zone-title">Berlin POP</p>
+                <p class="zone-title">РЖУ-4</p>
                 <p class="zone-meta">47 узлов • 1 критичный</p>
               </div>
               <span class="badge danger">Critical</span>
@@ -367,12 +367,12 @@
           </div>
           <div class="link-grid">
             <div class="link-card">
-              <p>Core ↔ DC1</p>
+              <p>Core ↔ РЖУ-1</p>
               <div class="link-meter"><span style="width: 68%"></span></div>
               <p class="link-meta">8.1 Gbps • 68%</p>
             </div>
             <div class="link-card">
-              <p>DC1 ↔ Branch</p>
+              <p>РЖУ-1 ↔ РЖУ-2</p>
               <div class="link-meter"><span style="width: 52%"></span></div>
               <p class="link-meta">5.2 Gbps • 52%</p>
             </div>
@@ -450,7 +450,7 @@
             <div class="event-row">
               <div class="event-indicator warning"></div>
               <div>
-                <p class="event-title">Потери пакетов в зоне Moscow-DC1</p>
+                <p class="event-title">Потери пакетов в зоне РЖУ-1</p>
                 <p class="event-meta">Предупреждение • 14 минут назад</p>
               </div>
               <div class="event-actions">
@@ -490,12 +490,12 @@
             <p class="card-subtitle" data-i18n="network.coreLinksSubtitle">Средняя загрузка 68%</p>
             <div class="link-grid">
               <div class="link-card">
-                <p>Core ↔ DC1</p>
+                <p>Core ↔ РЖУ-1</p>
                 <div class="link-meter"><span style="width: 68%"></span></div>
                 <p class="link-meta">8.1 Gbps • 68%</p>
               </div>
               <div class="link-card">
-                <p>Core ↔ DC2</p>
+                <p>Core ↔ РЖУ-2</p>
                 <div class="link-meter"><span style="width: 48%"></span></div>
                 <p class="link-meta">6.7 Gbps • 48%</p>
               </div>
@@ -585,10 +585,10 @@
               <label>
                 <span data-i18n="topology.nodeZone">Зона</span>
                 <select name="zone" required>
-                  <option value="Moscow-DC1">Moscow-DC1</option>
-                  <option value="Saint-Petersburg">Saint-Petersburg</option>
-                  <option value="Almaty Edge">Almaty Edge</option>
-                  <option value="Berlin POP">Berlin POP</option>
+                  <option value="РЖУ-1">РЖУ-1</option>
+                  <option value="РЖУ-2">РЖУ-2</option>
+                  <option value="РЖУ-3">РЖУ-3</option>
+                  <option value="РЖУ-4">РЖУ-4</option>
                 </select>
               </label>
               <button class="primary" type="submit" data-i18n="topology.addNode">Добавить узел</button>

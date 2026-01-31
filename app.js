@@ -322,12 +322,12 @@ const statusLabels = {
 };
 
 const baseTopologyNodes = [
-  { id: "core-sw", name: "CORE-SW", type: "core", zone: "Moscow-DC1", x: 50, y: 14 },
-  { id: "sw-101", name: "SW-101", type: "access", zone: "Moscow-DC1", x: 18, y: 48 },
-  { id: "sw-205", name: "SW-205", type: "access", zone: "Moscow-DC1", x: 82, y: 48 },
-  { id: "sw-312", name: "SW-312", type: "voice", zone: "Saint-Petersburg", x: 50, y: 70 },
-  { id: "sw-509", name: "SW-509", type: "edge", zone: "Berlin POP", x: 88, y: 78 },
-  { id: "sw-041", name: "SW-041", type: "access", zone: "Almaty Edge", x: 8, y: 78 },
+  { id: "core-sw", name: "CORE-SW", type: "core", zone: "РЖУ-1", x: 50, y: 14 },
+  { id: "sw-101", name: "SW-101", type: "access", zone: "РЖУ-1", x: 18, y: 48 },
+  { id: "sw-205", name: "SW-205", type: "access", zone: "РЖУ-1", x: 82, y: 48 },
+  { id: "sw-312", name: "SW-312", type: "voice", zone: "РЖУ-2", x: 50, y: 70 },
+  { id: "sw-509", name: "SW-509", type: "edge", zone: "РЖУ-4", x: 88, y: 78 },
+  { id: "sw-041", name: "SW-041", type: "access", zone: "РЖУ-3", x: 8, y: 78 },
 ];
 
 const clampPercent = (value, min = 6, max = 94) =>

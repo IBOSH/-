@@ -15,6 +15,7 @@ const topologyNodeCount = document.getElementById("topology-node-count");
 const topologyLinkCount = document.getElementById("topology-link-count");
 const topologyLinkFrom = document.getElementById("topology-link-from");
 const topologyLinkTo = document.getElementById("topology-link-to");
+const topologyStageLayers = new Map();
 
 const formatTime = (date) =>
   date.toLocaleTimeString("ru-RU", {
@@ -165,47 +166,60 @@ const typeClass = (type) => {
 const renderTopology = () => {
   if (!dashboardTopology || !topologyStage) return;
 
-  const renderStage = (target) => {
+  const renderStage = (target, isInteractive) => {
     target.innerHTML = "";
     const stage = document.createElement("div");
     stage.className = "topology-stage-inner";
+    const linksLayer = document.createElement("div");
+    linksLayer.className = "topology-links";
+    const nodesLayer = document.createElement("div");
+    nodesLayer.className = "topology-nodes";
+    stage.appendChild(linksLayer);
+    stage.appendChild(nodesLayer);
+    topologyStageLayers.set(target, { linksLayer, nodesLayer });
 
-    topologyLinks.forEach((link) => {
-      const from = topologyNodes.find((node) => node.id === link.from);
-      const to = topologyNodes.find((node) => node.id === link.to);
-      if (!from || !to) return;
-      const line = document.createElement("div");
-      line.className = `topology-link link-${link.type}`;
-      const x1 = from.x;
-      const y1 = from.y;
-      const x2 = to.x;
-      const y2 = to.y;
-      const length = Math.hypot(x2 - x1, y2 - y1);
-      const angle = Math.atan2(y2 - y1, x2 - x1) * (180 / Math.PI);
-      line.style.left = `${x1}%`;
-      line.style.top = `${y1}%`;
-      line.style.width = `${length}%`;
-      line.style.transform = `rotate(${angle}deg)`;
-      stage.appendChild(line);
-    });
+    const buildLinks = () => {
+      linksLayer.innerHTML = "";
+      topologyLinks.forEach((link) => {
+        const from = topologyNodes.find((node) => node.id === link.from);
+        const to = topologyNodes.find((node) => node.id === link.to);
+        if (!from || !to) return;
+        const line = document.createElement("div");
+        line.className = `topology-link link-${link.type}`;
+        const x1 = from.x;
+        const y1 = from.y;
+        const x2 = to.x;
+        const y2 = to.y;
+        const length = Math.hypot(x2 - x1, y2 - y1);
+        const angle = Math.atan2(y2 - y1, x2 - x1) * (180 / Math.PI);
+        line.style.left = `${x1}%`;
+        line.style.top = `${y1}%`;
+        line.style.width = `${length}%`;
+        line.style.transform = `rotate(${angle}deg)`;
+        linksLayer.appendChild(line);
+      });
+    };
 
     topologyNodes.forEach((node) => {
       const card = document.createElement("div");
       card.className = `topology-node ${typeClass(node.type)}`;
+      if (isInteractive) card.classList.add("is-draggable");
+      card.dataset.id = node.id;
       card.style.left = `${node.x}%`;
       card.style.top = `${node.y}%`;
       card.innerHTML = `
         <span class="node-name">${node.name}</span>
         <span class="node-zone">${node.zone}</span>
       `;
-      stage.appendChild(card);
+      nodesLayer.appendChild(card);
     });
 
+    buildLinks();
     target.appendChild(stage);
   };
 
-  renderStage(dashboardTopology);
-  renderStage(topologyStage);
+  renderStage(dashboardTopology, false);
+  renderStage(topologyStage, true);
 
   if (topologyNodeList) {
     topologyNodeList.innerHTML = "";
@@ -223,6 +237,42 @@ const renderTopology = () => {
 
   if (topologyNodeCount) topologyNodeCount.textContent = `${topologyNodes.length}`;
   if (topologyLinkCount) topologyLinkCount.textContent = `${topologyLinks.length}`;
+};
+
+const rebuildLinksForStage = (target) => {
+  const layers = topologyStageLayers.get(target);
+  if (!layers) return;
+  layers.linksLayer.innerHTML = "";
+  topologyLinks.forEach((link) => {
+    const from = topologyNodes.find((node) => node.id === link.from);
+    const to = topologyNodes.find((node) => node.id === link.to);
+    if (!from || !to) return;
+    const line = document.createElement("div");
+    line.className = `topology-link link-${link.type}`;
+    const x1 = from.x;
+    const y1 = from.y;
+    const x2 = to.x;
+    const y2 = to.y;
+    const length = Math.hypot(x2 - x1, y2 - y1);
+    const angle = Math.atan2(y2 - y1, x2 - x1) * (180 / Math.PI);
+    line.style.left = `${x1}%`;
+    line.style.top = `${y1}%`;
+    line.style.width = `${length}%`;
+    line.style.transform = `rotate(${angle}deg)`;
+    layers.linksLayer.appendChild(line);
+  });
+};
+
+const updateNodePositions = (nodeId) => {
+  const node = topologyNodes.find((item) => item.id === nodeId);
+  if (!node) return;
+  [dashboardTopology, topologyStage].forEach((target) => {
+    if (!target) return;
+    const nodeElement = target.querySelector(`.topology-node[data-id="${nodeId}"]`);
+    if (!nodeElement) return;
+    nodeElement.style.left = `${node.x}%`;
+    nodeElement.style.top = `${node.y}%`;
+  });
 };
 
 const syncLinkOptions = () => {
@@ -294,6 +344,42 @@ if (topologyLinkForm) {
     syncLinkOptions();
     renderTopology();
   });
+}
+
+if (topologyStage) {
+  let activeDragId = null;
+
+  const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
+
+  const handlePointerMove = (event) => {
+    if (!activeDragId) return;
+    const bounds = topologyStage.getBoundingClientRect();
+    const xPercent = ((event.clientX - bounds.left) / bounds.width) * 100;
+    const yPercent = ((event.clientY - bounds.top) / bounds.height) * 100;
+    const node = topologyNodes.find((item) => item.id === activeDragId);
+    if (!node) return;
+    node.x = clamp(xPercent, 6, 94);
+    node.y = clamp(yPercent, 8, 92);
+    updateNodePositions(activeDragId);
+    rebuildLinksForStage(topologyStage);
+    rebuildLinksForStage(dashboardTopology);
+  };
+
+  const stopDrag = () => {
+    if (!activeDragId) return;
+    activeDragId = null;
+  };
+
+  topologyStage.addEventListener("pointerdown", (event) => {
+    const nodeEl = event.target.closest(".topology-node");
+    if (!nodeEl) return;
+    activeDragId = nodeEl.dataset.id;
+    nodeEl.setPointerCapture(event.pointerId);
+  });
+
+  topologyStage.addEventListener("pointermove", handlePointerMove);
+  topologyStage.addEventListener("pointerup", stopDrag);
+  topologyStage.addEventListener("pointerleave", stopDrag);
 }
 
 const setActiveSection = (sectionId) => {

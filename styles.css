@@ -640,6 +640,20 @@ button.small {
   box-shadow: 0 12px 30px rgba(15, 23, 42, 0.45);
 }
 
+.topology-links,
+.topology-nodes {
+  position: absolute;
+  inset: 0;
+}
+
+.topology-node.is-draggable {
+  cursor: grab;
+}
+
+.topology-node.is-draggable:active {
+  cursor: grabbing;
+}
+
 .topology-node .node-name {
   display: block;
   font-weight: 600;

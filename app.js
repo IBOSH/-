@@ -6,6 +6,15 @@ const deviceForm = document.getElementById("device-form");
 const categoryTabs = document.querySelectorAll(".tab");
 const navLinks = document.querySelectorAll(".nav-link");
 const sections = document.querySelectorAll(".page-section");
+const dashboardTopology = document.getElementById("dashboard-topology");
+const topologyStage = document.getElementById("topology-stage");
+const topologyNodeForm = document.getElementById("topology-node-form");
+const topologyLinkForm = document.getElementById("topology-link-form");
+const topologyNodeList = document.getElementById("topology-node-list");
+const topologyNodeCount = document.getElementById("topology-node-count");
+const topologyLinkCount = document.getElementById("topology-link-count");
+const topologyLinkFrom = document.getElementById("topology-link-from");
+const topologyLinkTo = document.getElementById("topology-link-to");
 
 const formatTime = (date) =>
   date.toLocaleTimeString("ru-RU", {
@@ -74,6 +83,23 @@ const statusLabels = {
   offline: "Оффлайн",
 };
 
+const topologyNodes = [
+  { id: "core-sw", name: "CORE-SW", type: "core", zone: "Moscow-DC1", x: 50, y: 14 },
+  { id: "sw-101", name: "SW-101", type: "access", zone: "Moscow-DC1", x: 18, y: 48 },
+  { id: "sw-205", name: "SW-205", type: "access", zone: "Moscow-DC1", x: 82, y: 48 },
+  { id: "sw-312", name: "SW-312", type: "voice", zone: "Saint-Petersburg", x: 50, y: 70 },
+  { id: "sw-509", name: "SW-509", type: "edge", zone: "Berlin POP", x: 88, y: 78 },
+  { id: "sw-041", name: "SW-041", type: "access", zone: "Almaty Edge", x: 8, y: 78 },
+];
+
+const topologyLinks = [
+  { from: "core-sw", to: "sw-101", type: "core" },
+  { from: "core-sw", to: "sw-205", type: "core" },
+  { from: "core-sw", to: "sw-312", type: "core" },
+  { from: "sw-205", to: "sw-509", type: "alert" },
+  { from: "sw-101", to: "sw-041", type: "access" },
+];
+
 let activeCategory = "all";
 
 const buildDeviceTable = (rows, target) => {
@@ -122,6 +148,98 @@ const setActiveCategory = (category) => {
   renderDeviceTable();
 };
 
+const typeLabels = {
+  core: "Core",
+  access: "Access",
+  voice: "Voice",
+  edge: "Edge",
+};
+
+const typeClass = (type) => {
+  if (type === "core") return "node-core";
+  if (type === "voice") return "node-voice";
+  if (type === "edge") return "node-edge";
+  return "node-access";
+};
+
+const renderTopology = () => {
+  if (!dashboardTopology || !topologyStage) return;
+
+  const renderStage = (target) => {
+    target.innerHTML = "";
+    const stage = document.createElement("div");
+    stage.className = "topology-stage-inner";
+
+    topologyLinks.forEach((link) => {
+      const from = topologyNodes.find((node) => node.id === link.from);
+      const to = topologyNodes.find((node) => node.id === link.to);
+      if (!from || !to) return;
+      const line = document.createElement("div");
+      line.className = `topology-link link-${link.type}`;
+      const x1 = from.x;
+      const y1 = from.y;
+      const x2 = to.x;
+      const y2 = to.y;
+      const length = Math.hypot(x2 - x1, y2 - y1);
+      const angle = Math.atan2(y2 - y1, x2 - x1) * (180 / Math.PI);
+      line.style.left = `${x1}%`;
+      line.style.top = `${y1}%`;
+      line.style.width = `${length}%`;
+      line.style.transform = `rotate(${angle}deg)`;
+      stage.appendChild(line);
+    });
+
+    topologyNodes.forEach((node) => {
+      const card = document.createElement("div");
+      card.className = `topology-node ${typeClass(node.type)}`;
+      card.style.left = `${node.x}%`;
+      card.style.top = `${node.y}%`;
+      card.innerHTML = `
+        <span class="node-name">${node.name}</span>
+        <span class="node-zone">${node.zone}</span>
+      `;
+      stage.appendChild(card);
+    });
+
+    target.appendChild(stage);
+  };
+
+  renderStage(dashboardTopology);
+  renderStage(topologyStage);
+
+  if (topologyNodeList) {
+    topologyNodeList.innerHTML = "";
+    topologyNodes.forEach((node) => {
+      const row = document.createElement("div");
+      row.className = "topology-node-row";
+      row.innerHTML = `
+        <span>${node.name}</span>
+        <span class="node-pill">${typeLabels[node.type]}</span>
+        <span class="node-zone-label">${node.zone}</span>
+      `;
+      topologyNodeList.appendChild(row);
+    });
+  }
+
+  if (topologyNodeCount) topologyNodeCount.textContent = `${topologyNodes.length}`;
+  if (topologyLinkCount) topologyLinkCount.textContent = `${topologyLinks.length}`;
+};
+
+const syncLinkOptions = () => {
+  if (!topologyLinkFrom || !topologyLinkTo) return;
+  const buildOptions = (select) => {
+    select.innerHTML = "";
+    topologyNodes.forEach((node) => {
+      const option = document.createElement("option");
+      option.value = node.id;
+      option.textContent = node.name;
+      select.appendChild(option);
+    });
+  };
+  buildOptions(topologyLinkFrom);
+  buildOptions(topologyLinkTo);
+};
+
 categoryTabs.forEach((tab) => {
   tab.addEventListener("click", () => {
     setActiveCategory(tab.dataset.category);
@@ -142,6 +260,39 @@ if (deviceForm) {
     devices.unshift(newDevice);
     deviceForm.reset();
     renderDeviceTable();
+  });
+}
+
+if (topologyNodeForm) {
+  topologyNodeForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const formData = new FormData(topologyNodeForm);
+    const name = formData.get("name").trim();
+    const type = formData.get("type");
+    const zone = formData.get("zone");
+    if (!name) return;
+    const id = `${name.toLowerCase().replace(/\s+/g, "-")}-${Date.now()}`;
+    const x = Math.min(90, Math.max(10, 10 + Math.random() * 80));
+    const y = Math.min(85, Math.max(8, 10 + Math.random() * 70));
+    topologyNodes.push({ id, name, type, zone, x, y });
+    topologyNodeForm.reset();
+    syncLinkOptions();
+    renderTopology();
+  });
+}
+
+if (topologyLinkForm) {
+  topologyLinkForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const formData = new FormData(topologyLinkForm);
+    const from = formData.get("from");
+    const to = formData.get("to");
+    const type = formData.get("linkType");
+    if (!from || !to || from === to) return;
+    topologyLinks.push({ from, to, type });
+    topologyLinkForm.reset();
+    syncLinkOptions();
+    renderTopology();
   });
 }
 
@@ -184,3 +335,5 @@ setInterval(updateTime, 1000 * 30);
 renderPingList();
 setInterval(renderPingList, 5000);
 renderDeviceTable();
+syncLinkOptions();
+renderTopology();

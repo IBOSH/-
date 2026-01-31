@@ -11,7 +11,7 @@ const topologyTabs = document.querySelectorAll(".topology-tab");
 const topologyAreaSelect = document.getElementById("topology-area-select");
 const topologyStage = document.getElementById("topology-stage");
 const languageSelect = document.getElementById("language-select");
-const themeToggle = document.getElementById("theme-toggle");
+const themeSelect = document.getElementById("theme-select");
 const topologyNodeForm = document.getElementById("topology-node-form");
 const topologyLinkForm = document.getElementById("topology-link-form");
 const topologyNodeList = document.getElementById("topology-node-list");
@@ -25,7 +25,7 @@ const topologyClearLinks = document.getElementById("topology-clear-links");
 const topologyStageLayers = new Map();
 
 const formatTime = (date) =>
-  date.toLocaleTimeString("ru-RU", {
+  date.toLocaleTimeString(activeLanguage === "uz" ? "uz-UZ" : "ru-RU", {
     hour: "2-digit",
     minute: "2-digit",
   });
@@ -92,8 +92,7 @@ const translations = {
     "sidebar.statusLabel": "Состояние агента",
     "sidebar.statusActive": "Активен",
     "sidebar.languageLabel": "Язык",
-    "sidebar.themeLight": "Светлая тема",
-    "sidebar.themeDark": "Тёмная тема",
+    "sidebar.themeLabel": "Тема",
     "dashboard.title": "Центр контроля сети",
     "dashboard.subtitle": "250 коммутаторов • 600 IP-телефонов • живые пинги",
     "actions.export": "Экспорт",
@@ -204,8 +203,7 @@ const translations = {
     "sidebar.statusLabel": "Agent holati",
     "sidebar.statusActive": "Faol",
     "sidebar.languageLabel": "Til",
-    "sidebar.themeLight": "Yorug‘ tema",
-    "sidebar.themeDark": "Qorong‘i tema",
+    "sidebar.themeLabel": "Mavzu",
     "dashboard.title": "Tarmoq nazorat markazi",
     "dashboard.subtitle": "250 kommutator • 600 IP-telefon • jonli pinglar",
     "actions.export": "Eksport",
@@ -594,14 +592,11 @@ const applyTranslations = () => {
 };
 
 const setTheme = (theme) => {
-  document.documentElement.dataset.theme = theme;
-  localStorage.setItem("theme", theme);
-  if (themeToggle) {
-    themeToggle.textContent =
-      theme === "light"
-        ? translate("sidebar.themeDark")
-        : translate("sidebar.themeLight");
-  }
+  const allowedThemes = ["dark", "light", "ops", "zabbix", "graphite"];
+  const nextTheme = allowedThemes.includes(theme) ? theme : "dark";
+  document.documentElement.dataset.theme = nextTheme;
+  localStorage.setItem("theme", nextTheme);
+  if (themeSelect) themeSelect.value = nextTheme;
 };
 
 const setLanguage = (language) => {
@@ -610,6 +605,7 @@ const setLanguage = (language) => {
   localStorage.setItem("language", language);
   if (languageSelect) languageSelect.value = language;
   applyTranslations();
+  updateTime();
   setTheme(document.documentElement.dataset.theme || "dark");
 };
 
@@ -819,10 +815,9 @@ if (languageSelect) {
   });
 }
 
-if (themeToggle) {
-  themeToggle.addEventListener("click", () => {
-    const currentTheme = document.documentElement.dataset.theme || "dark";
-    setTheme(currentTheme === "dark" ? "light" : "dark");
+if (themeSelect) {
+  themeSelect.addEventListener("change", (event) => {
+    setTheme(event.target.value);
   });
 }
 

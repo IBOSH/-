@@ -26,6 +26,48 @@
   --danger: #dc2626;
 }
 
+:root[data-theme="ops"] {
+  color-scheme: dark;
+  --bg: #070b16;
+  --panel: #0c1426;
+  --panel-light: #142238;
+  --panel-strong: #1a2f4d;
+  --text: #e2e8f0;
+  --muted: #94a3b8;
+  --accent: #38bdf8;
+  --success: #22c55e;
+  --warning: #f59e0b;
+  --danger: #fb7185;
+}
+
+:root[data-theme="zabbix"] {
+  color-scheme: dark;
+  --bg: #081426;
+  --panel: #0f1f35;
+  --panel-light: #142a48;
+  --panel-strong: #1a355a;
+  --text: #e2e8f0;
+  --muted: #94a3b8;
+  --accent: #3b82f6;
+  --success: #22c55e;
+  --warning: #fbbf24;
+  --danger: #f87171;
+}
+
+:root[data-theme="graphite"] {
+  color-scheme: dark;
+  --bg: #0a0b0f;
+  --panel: #12141a;
+  --panel-light: #1a1d26;
+  --panel-strong: #222633;
+  --text: #e5e7eb;
+  --muted: #9ca3af;
+  --accent: #8b5cf6;
+  --success: #4ade80;
+  --warning: #fbbf24;
+  --danger: #f87171;
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -41,6 +83,12 @@ body {
 
 :root[data-theme="light"] body {
   background: radial-gradient(circle at top, #ffffff, var(--bg));
+}
+
+:root[data-theme="ops"] body,
+:root[data-theme="zabbix"] body,
+:root[data-theme="graphite"] body {
+  background: radial-gradient(circle at top, var(--panel-light), var(--bg));
 }
 
 .app {

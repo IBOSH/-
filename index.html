@@ -25,9 +25,14 @@
           <option value="ru">Русский</option>
           <option value="uz">Oʻzbekcha</option>
         </select>
-        <button class="ghost small" type="button" id="theme-toggle" data-i18n="sidebar.themeLight">
-          Светлая тема
-        </button>
+        <label class="control-label" for="theme-select" data-i18n="sidebar.themeLabel">Тема</label>
+        <select id="theme-select" class="ghost small" aria-label="Выбор темы">
+          <option value="dark">Dark</option>
+          <option value="light">Light</option>
+          <option value="ops">Night Ops</option>
+          <option value="zabbix">Blue Zabbix</option>
+          <option value="graphite">Graphite</option>
+        </select>
       </div>
       <nav class="nav">
         <a class="nav-link active" href="#dashboard" data-section="dashboard" data-i18n="nav.dashboard">Дашборд</a>

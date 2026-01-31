@@ -348,6 +348,7 @@ if (topologyLinkForm) {
 
 if (topologyStage) {
   let activeDragId = null;
+  let activePointerId = null;
 
   const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
 
@@ -368,17 +369,22 @@ if (topologyStage) {
   const stopDrag = () => {
     if (!activeDragId) return;
     activeDragId = null;
+    activePointerId = null;
+    window.removeEventListener("pointermove", handlePointerMove);
+    window.removeEventListener("pointerup", stopDrag);
   };
 
   topologyStage.addEventListener("pointerdown", (event) => {
     const nodeEl = event.target.closest(".topology-node");
     if (!nodeEl) return;
+    event.preventDefault();
     activeDragId = nodeEl.dataset.id;
-    nodeEl.setPointerCapture(event.pointerId);
+    activePointerId = event.pointerId;
+    nodeEl.setPointerCapture(activePointerId);
+    window.addEventListener("pointermove", handlePointerMove);
+    window.addEventListener("pointerup", stopDrag);
   });
 
-  topologyStage.addEventListener("pointermove", handlePointerMove);
-  topologyStage.addEventListener("pointerup", stopDrag);
   topologyStage.addEventListener("pointerleave", stopDrag);
 }
 

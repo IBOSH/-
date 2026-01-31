@@ -648,6 +648,7 @@ button.small {
 
 .topology-node.is-draggable {
   cursor: grab;
+  touch-action: none;
 }
 
 .topology-node.is-draggable:active {

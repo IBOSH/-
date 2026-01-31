@@ -609,7 +609,7 @@ button.small {
 .topology-stage {
   position: relative;
   width: 100%;
-  min-height: 320px;
+  min-height: 360px;
   border-radius: 22px;
   background: rgba(15, 23, 42, 0.65);
   border: 1px solid rgba(96, 165, 250, 0.2);
@@ -617,7 +617,7 @@ button.small {
 }
 
 .topology-stage {
-  min-height: 520px;
+  min-height: 620px;
   background: radial-gradient(circle at top, rgba(15, 23, 42, 0.85), rgba(15, 23, 42, 0.55));
 }
 

@@ -95,13 +95,7 @@ const topologyNodes = [
   { id: "sw-041", name: "SW-041", type: "access", zone: "Almaty Edge", x: 8, y: 78 },
 ];
 
-const topologyLinks = [
-  { from: "core-sw", to: "sw-101", type: "core" },
-  { from: "core-sw", to: "sw-205", type: "core" },
-  { from: "core-sw", to: "sw-312", type: "core" },
-  { from: "sw-205", to: "sw-509", type: "alert" },
-  { from: "sw-101", to: "sw-041", type: "access" },
-];
+const topologyLinks = [];
 
 let activeCategory = "all";
 let isTopologyEditMode = false;

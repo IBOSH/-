@@ -136,6 +136,26 @@ body {
   padding: 32px 36px 48px;
 }
 
+.page-section {
+  display: none;
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+.page-section.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .topbar {
   display: flex;
   align-items: center;
@@ -802,6 +822,10 @@ button.small {
   padding: 12px 14px;
   border-radius: 14px;
   font-size: 13px;
+}
+
+.device-row span {
+  overflow-wrap: anywhere;
 }
 
 .device-row.header {

@@ -20,12 +20,12 @@
         </div>
       </div>
       <nav class="nav">
-        <a class="nav-link active" href="#">Дашборд</a>
-        <a class="nav-link" href="#">Сеть</a>
-        <a class="nav-link" href="#">Узлы</a>
-        <a class="nav-link" href="#">События</a>
-        <a class="nav-link" href="#">Отчёты</a>
-        <a class="nav-link" href="#">Настройки</a>
+        <a class="nav-link active" href="#dashboard" data-section="dashboard">Дашборд</a>
+        <a class="nav-link" href="#network" data-section="network">Сеть</a>
+        <a class="nav-link" href="#nodes" data-section="nodes">Узлы</a>
+        <a class="nav-link" href="#events" data-section="events">События</a>
+        <a class="nav-link" href="#reports" data-section="reports">Отчёты</a>
+        <a class="nav-link" href="#settings" data-section="settings">Настройки</a>
       </nav>
       <div class="sidebar-footer">
         <p class="footer-label">Состояние агента</p>
@@ -38,23 +38,24 @@
     </aside>
 
     <main class="content">
-      <header class="topbar">
-        <div>
-        <p class="page-title">Центр контроля сети</p>
-        <p class="page-subtitle">250 коммутаторов • 600 IP-телефонов • живые пинги</p>
-        </div>
-        <div class="topbar-actions">
-          <button class="ghost">Экспорт</button>
-          <button class="primary">Создать отчёт</button>
-        </div>
-      </header>
+      <section class="page-section active" id="dashboard" data-section="dashboard">
+        <header class="topbar">
+          <div>
+          <p class="page-title">Центр контроля сети</p>
+          <p class="page-subtitle">250 коммутаторов • 600 IP-телефонов • живые пинги</p>
+          </div>
+          <div class="topbar-actions">
+            <button class="ghost">Экспорт</button>
+            <button class="primary">Создать отчёт</button>
+          </div>
+        </header>
 
-      <section class="kpi-grid">
-        <article class="kpi-card">
-          <p class="kpi-title">Инфраструктура</p>
-          <p class="kpi-value">850 устройств</p>
-          <p class="kpi-meta success">Коммутаторы + телефония</p>
-        </article>
+        <section class="kpi-grid">
+          <article class="kpi-card">
+            <p class="kpi-title">Инфраструктура</p>
+            <p class="kpi-value">850 устройств</p>
+            <p class="kpi-meta success">Коммутаторы + телефония</p>
+          </article>
         <article class="kpi-card">
           <p class="kpi-title">Доступность сети</p>
           <p class="kpi-value">99.98%</p>
@@ -85,23 +86,23 @@
           <p class="kpi-value">600</p>
           <p class="kpi-meta warning">12 офлайн</p>
         </article>
-      </section>
+        </section>
 
-      <section class="category-panel">
-        <div>
-          <p class="card-title">Категории устройств</p>
-          <p class="card-subtitle">Переключайтесь между группами и добавляйте новые устройства</p>
-        </div>
-        <div class="category-tabs" role="tablist" aria-label="Категории устройств">
-          <button class="tab active" type="button" data-category="all">Все</button>
-          <button class="tab" type="button" data-category="switch">Коммутаторы</button>
-          <button class="tab" type="button" data-category="phone">IP-телефоны</button>
-          <button class="tab" type="button" data-category="router">Маршрутизаторы</button>
-          <button class="tab" type="button" data-category="server">Серверы</button>
-        </div>
-      </section>
+        <section class="category-panel">
+          <div>
+            <p class="card-title">Категории устройств</p>
+            <p class="card-subtitle">Переключайтесь между группами и добавляйте новые устройства</p>
+          </div>
+          <div class="category-tabs" role="tablist" aria-label="Категории устройств">
+            <button class="tab active" type="button" data-category="all">Все</button>
+            <button class="tab" type="button" data-category="switch">Коммутаторы</button>
+            <button class="tab" type="button" data-category="phone">IP-телефоны</button>
+            <button class="tab" type="button" data-category="router">Маршрутизаторы</button>
+            <button class="tab" type="button" data-category="server">Серверы</button>
+          </div>
+        </section>
 
-      <section class="grid">
+        <section class="grid">
         <article class="card span-7">
           <div class="card-header">
             <div>
@@ -303,7 +304,7 @@
           </div>
         </article>
 
-        <article class="card span-12">
+          <article class="card span-12">
           <div class="card-header">
             <div>
               <p class="card-title">Перечень устройств</p>
@@ -332,7 +333,7 @@
           <div class="device-table" id="device-table" aria-live="polite"></div>
         </article>
 
-        <article class="card span-6">
+          <article class="card span-6">
           <div class="card-header">
             <div>
               <p class="card-title">Качество VoIP</p>
@@ -371,7 +372,7 @@
           </div>
         </article>
 
-        <article class="card span-6">
+          <article class="card span-6">
           <div class="card-header">
             <div>
               <p class="card-title">Каналы связи</p>
@@ -398,7 +399,7 @@
           </div>
         </article>
 
-        <article class="card span-12">
+          <article class="card span-12">
           <div class="card-header">
             <div>
               <p class="card-title">Карта распределения устройств</p>
@@ -441,7 +442,7 @@
           </div>
         </article>
 
-        <article class="card span-12">
+          <article class="card span-12">
           <div class="card-header">
             <div>
               <p class="card-title">Последние события</p>
@@ -484,6 +485,194 @@
             </div>
           </div>
         </article>
+        </section>
+      </section>
+
+      <section class="page-section" id="network" data-section="network">
+        <header class="topbar">
+          <div>
+            <p class="page-title">Сеть</p>
+            <p class="page-subtitle">Обзор каналов связи и сегментов</p>
+          </div>
+          <div class="topbar-actions">
+            <button class="ghost">Экспорт</button>
+            <button class="primary">Оптимизация</button>
+          </div>
+        </header>
+        <div class="grid">
+          <article class="card span-6">
+            <p class="card-title">Каналы ядра</p>
+            <p class="card-subtitle">Средняя загрузка 68%</p>
+            <div class="link-grid">
+              <div class="link-card">
+                <p>Core ↔ DC1</p>
+                <div class="link-meter"><span style="width: 68%"></span></div>
+                <p class="link-meta">8.1 Gbps • 68%</p>
+              </div>
+              <div class="link-card">
+                <p>Core ↔ DC2</p>
+                <div class="link-meter"><span style="width: 48%"></span></div>
+                <p class="link-meta">6.7 Gbps • 48%</p>
+              </div>
+            </div>
+          </article>
+          <article class="card span-6">
+            <p class="card-title">Карта сегментов</p>
+            <p class="card-subtitle">Core • Access • Voice</p>
+            <div class="network-map">
+              <div class="map-overlay">
+                <p>Сегменты: Core, Access, Voice</p>
+                <p>Активно: 14</p>
+              </div>
+              <svg viewBox="0 0 720 200" preserveAspectRatio="none">
+                <rect width="720" height="200" fill="rgba(15, 23, 42, 0.4)" />
+                <path class="map-line" d="M40 40 L200 30 L360 60 L520 50 L680 70" />
+                <path class="map-line success" d="M120 160 L260 140 L420 150 L600 130" />
+                <path class="map-line warning" d="M80 90 L240 80 L400 100 L560 90 L680 110" />
+              </svg>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="page-section" id="nodes" data-section="nodes">
+        <header class="topbar">
+          <div>
+            <p class="page-title">Узлы</p>
+            <p class="page-subtitle">Список устройств и групп</p>
+          </div>
+          <div class="topbar-actions">
+            <button class="ghost">Импорт</button>
+            <button class="primary">Добавить узел</button>
+          </div>
+        </header>
+        <div class="grid">
+          <article class="card span-12">
+            <p class="card-title">Инвентарь устройств</p>
+            <p class="card-subtitle">Доступно через таблицу на дашборде</p>
+            <div class="device-table" id="device-table-nodes"></div>
+          </article>
+        </div>
+      </section>
+
+      <section class="page-section" id="events" data-section="events">
+        <header class="topbar">
+          <div>
+            <p class="page-title">События</p>
+            <p class="page-subtitle">Лента инцидентов и уведомлений</p>
+          </div>
+          <div class="topbar-actions">
+            <button class="ghost">Фильтр</button>
+            <button class="primary">Экспорт CSV</button>
+          </div>
+        </header>
+        <div class="grid">
+          <article class="card span-12">
+            <p class="card-title">Инциденты за 24 часа</p>
+            <div class="event-table">
+              <div class="event-row">
+                <div class="event-indicator danger"></div>
+                <div>
+                  <p class="event-title">Потеря связи с SW-509</p>
+                  <p class="event-meta">Критично • 8 минут назад</p>
+                </div>
+                <div class="event-actions">
+                  <button class="ghost small">Диагностика</button>
+                  <button class="primary small">Эскалация</button>
+                </div>
+              </div>
+              <div class="event-row">
+                <div class="event-indicator warning"></div>
+                <div>
+                  <p class="event-title">Рост задержки в сегменте Voice</p>
+                  <p class="event-meta">Предупреждение • 25 минут назад</p>
+                </div>
+                <div class="event-actions">
+                  <button class="ghost small">План работ</button>
+                  <button class="primary small">Создать тикет</button>
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="page-section" id="reports" data-section="reports">
+        <header class="topbar">
+          <div>
+            <p class="page-title">Отчёты</p>
+            <p class="page-subtitle">Подготовка аналитики и отчётности</p>
+          </div>
+          <div class="topbar-actions">
+            <button class="ghost">Шаблоны</button>
+            <button class="primary">Создать отчёт</button>
+          </div>
+        </header>
+        <div class="grid">
+          <article class="card span-6">
+            <p class="card-title">Доступность</p>
+            <p class="card-subtitle">Отчёт по SLA за неделю</p>
+            <div class="sparkline">
+              <svg viewBox="0 0 200 60" preserveAspectRatio="none">
+                <path d="M0 40 L20 36 L40 38 L60 28 L80 32 L100 26 L120 30 L140 20 L160 24 L180 18 L200 22" />
+              </svg>
+              <p class="sparkline-label">Средний SLA: 99.96%</p>
+            </div>
+          </article>
+          <article class="card span-6">
+            <p class="card-title">Телефония</p>
+            <p class="card-subtitle">Качество VoIP за неделю</p>
+            <div class="voice-bars">
+              <div class="bar">
+                <span>MOS</span>
+                <div class="bar-track"><div class="bar-fill success" style="width: 82%;"></div></div>
+                <span>4.3</span>
+              </div>
+              <div class="bar">
+                <span>Потери</span>
+                <div class="bar-track"><div class="bar-fill warning" style="width: 28%;"></div></div>
+                <span>1.1%</span>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="page-section" id="settings" data-section="settings">
+        <header class="topbar">
+          <div>
+            <p class="page-title">Настройки</p>
+            <p class="page-subtitle">Параметры мониторинга и интеграций</p>
+          </div>
+          <div class="topbar-actions">
+            <button class="ghost">Сброс</button>
+            <button class="primary">Сохранить</button>
+          </div>
+        </header>
+        <div class="grid">
+          <article class="card span-12">
+            <p class="card-title">Интеграции</p>
+            <p class="card-subtitle">SNMP, Syslog, VoIP-метрики</p>
+            <div class="device-row">
+              <span>SNMP polling</span>
+              <span class="device-status">Включено</span>
+              <span>Интервал: 30 сек</span>
+              <span>Уровень: v2c</span>
+              <span class="device-actions">
+                <button class="ghost small" type="button">Настроить</button>
+              </span>
+            </div>
+            <div class="device-row">
+              <span>Syslog collector</span>
+              <span class="device-status warning">Внимание</span>
+              <span>Поток: 3.2k/s</span>
+              <span>Бэкап: активен</span>
+              <span class="device-actions">
+                <button class="ghost small" type="button">Настроить</button>
+              </span>
+            </div>
+          </article>
+        </div>
       </section>
     </main>
   </div>

@@ -1,8 +1,11 @@
 const timeElement = document.getElementById("local-time");
 const pingList = document.getElementById("ping-list");
 const deviceTable = document.getElementById("device-table");
+const deviceTableNodes = document.getElementById("device-table-nodes");
 const deviceForm = document.getElementById("device-form");
 const categoryTabs = document.querySelectorAll(".tab");
+const navLinks = document.querySelectorAll(".nav-link");
+const sections = document.querySelectorAll(".page-section");
 
 const formatTime = (date) =>
   date.toLocaleTimeString("ru-RU", {
@@ -73,13 +76,9 @@ const statusLabels = {
 
 let activeCategory = "all";
 
-const renderDeviceTable = () => {
-  if (!deviceTable) return;
-  const rows = devices.filter(
-    (device) => activeCategory === "all" || device.category === activeCategory
-  );
-
-  deviceTable.innerHTML = `
+const buildDeviceTable = (rows, target) => {
+  if (!target) return;
+  target.innerHTML = `
     <div class="device-row header">
       <span>Устройство</span>
       <span>IP</span>
@@ -103,8 +102,16 @@ const renderDeviceTable = () => {
         <button class="ghost small" type="button">Редактировать</button>
       </span>
     `;
-    deviceTable.appendChild(row);
+    target.appendChild(row);
   });
+};
+
+const renderDeviceTable = () => {
+  const rows = devices.filter(
+    (device) => activeCategory === "all" || device.category === activeCategory
+  );
+  buildDeviceTable(rows, deviceTable);
+  buildDeviceTable(rows, deviceTableNodes);
 };
 
 const setActiveCategory = (category) => {
@@ -137,6 +144,32 @@ if (deviceForm) {
     renderDeviceTable();
   });
 }
+
+const setActiveSection = (sectionId) => {
+  sections.forEach((section) => {
+    section.classList.toggle("active", section.dataset.section === sectionId);
+  });
+  navLinks.forEach((link) => {
+    link.classList.toggle("active", link.dataset.section === sectionId);
+  });
+};
+
+navLinks.forEach((link) => {
+  link.addEventListener("click", (event) => {
+    const sectionId = link.dataset.section;
+    if (!sectionId) return;
+    event.preventDefault();
+    history.replaceState(null, "", link.getAttribute("href"));
+    setActiveSection(sectionId);
+  });
+});
+
+const initialHash = window.location.hash.replace("#", "");
+const knownSections = Array.from(sections).map((section) => section.dataset.section);
+const initialSection = knownSections.includes(initialHash)
+  ? initialHash
+  : "dashboard";
+setActiveSection(initialSection);
 
 updateTime();
 setInterval(updateTime, 1000 * 30);

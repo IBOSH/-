@@ -22,6 +22,7 @@ const topologyLinkTo = document.getElementById("topology-link-to");
 const topologyEditToggle = document.getElementById("topology-edit-toggle");
 const topologyLinkToggle = document.getElementById("topology-link-toggle");
 const topologyClearLinks = document.getElementById("topology-clear-links");
+const topologyViewReset = document.getElementById("topology-view-reset");
 const topologyStageLayers = new Map();
 
 const formatTime = (date) =>
@@ -146,6 +147,7 @@ const translations = {
     "topology.linksOn": "Линии: вкл",
     "topology.linksOff": "Линии: выкл",
     "topology.clearLinks": "Очистить линии",
+    "topology.viewReset": "Сброс вида",
     "topology.save": "Сохранить схему",
     "topology.builderTitle": "Конструктор топологии",
     "topology.builderSubtitle": "Добавляйте узлы и связи — данные сразу появятся на дашборде",
@@ -161,6 +163,7 @@ const translations = {
     "topology.hintTitle": "Быстрое соединение",
     "topology.hintText":
       "Включите «Редактировать» и «Линии», кликните по двум узлам и выберите тип связи.",
+    "topology.panZoomHint": "Колёсиком — масштаб, перетаскиванием пустой области — панорама.",
     "topology.summaryNodes": "Узлов",
     "topology.summaryLinks": "Связей",
     "topology.summaryZones": "Зон",
@@ -257,6 +260,7 @@ const translations = {
     "topology.linksOn": "Chiziqlar: yoq",
     "topology.linksOff": "Chiziqlar: o‘ch",
     "topology.clearLinks": "Chiziqlarni tozalash",
+    "topology.viewReset": "Ko‘rishni tiklash",
     "topology.save": "Sxemani saqlash",
     "topology.builderTitle": "Topologiya konstruktori",
     "topology.builderSubtitle": "Tugunlar va bog‘lanishlarni qo‘shing — ma’lumotlar panelda darhol ko‘rinadi",
@@ -272,6 +276,7 @@ const translations = {
     "topology.hintTitle": "Tez ulash",
     "topology.hintText":
       "«Tahrirlash» va «Chiziqlar»ni yoqing, ikki tugunni bosing va bog‘lanish turini tanlang.",
+    "topology.panZoomHint": "G‘ildirak — masshtab, bo‘sh joyni tortish — panorama.",
     "topology.summaryNodes": "Tugunlar",
     "topology.summaryLinks": "Bog‘lanishlar",
     "topology.summaryZones": "Zonalar",
@@ -356,6 +361,7 @@ let isTopologyEditMode = false;
 let isTopologyLinkMode = false;
 let selectedLinkNodeId = null;
 let selectedLinkType = "core";
+const topologyView = { scale: 1, offsetX: 0, offsetY: 0 };
 
 const buildDeviceTable = (rows, target) => {
   if (!target) return;
@@ -436,7 +442,7 @@ const renderTopology = () => {
     nodesLayer.className = "topology-nodes";
     stage.appendChild(linksLayer);
     stage.appendChild(nodesLayer);
-    topologyStageLayers.set(target, { linksLayer, nodesLayer });
+    topologyStageLayers.set(target, { linksLayer, nodesLayer, stageInner: stage });
 
     const buildLinks = () => {
       linksLayer.innerHTML = "";
@@ -486,6 +492,7 @@ const renderTopology = () => {
 
   renderStage(dashboardTopology, false);
   renderStage(topologyStage, true);
+  applyTopologyTransform();
 
   if (topologyNodeList) {
     topologyNodeList.innerHTML = "";
@@ -562,6 +569,19 @@ const syncLinkOptions = () => {
 
 const updateSelectedLinkType = (type) => {
   selectedLinkType = type;
+};
+
+const applyTopologyTransform = () => {
+  const layers = topologyStageLayers.get(topologyStage);
+  if (!layers?.stageInner) return;
+  layers.stageInner.style.transform = `translate(${topologyView.offsetX}px, ${topologyView.offsetY}px) scale(${topologyView.scale})`;
+};
+
+const resetTopologyView = () => {
+  topologyView.scale = 1;
+  topologyView.offsetX = 0;
+  topologyView.offsetY = 0;
+  applyTopologyTransform();
 };
 
 const updateTopologyToggleLabels = () => {
@@ -683,6 +703,11 @@ if (topologyLinkForm) {
 if (topologyStage) {
   let activeDragId = null;
   let activePointerId = null;
+  let isPanning = false;
+  let panStartX = 0;
+  let panStartY = 0;
+  let panOriginX = 0;
+  let panOriginY = 0;
 
   const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
 
@@ -701,27 +726,70 @@ if (topologyStage) {
     rebuildLinksForStage(dashboardTopology);
   };
 
-  const stopDrag = () => {
+  const stopInteraction = () => {
     if (!activeDragId) return;
     activeDragId = null;
     activePointerId = null;
     window.removeEventListener("pointermove", handlePointerMove);
-    window.removeEventListener("pointerup", stopDrag);
+    window.removeEventListener("pointerup", stopInteraction);
+  };
+
+  const handlePanMove = (event) => {
+    if (!isPanning) return;
+    topologyView.offsetX = panOriginX + (event.clientX - panStartX);
+    topologyView.offsetY = panOriginY + (event.clientY - panStartY);
+    applyTopologyTransform();
+  };
+
+  const stopPan = () => {
+    if (!isPanning) return;
+    isPanning = false;
+    topologyStage.classList.remove("is-panning");
+    window.removeEventListener("pointermove", handlePanMove);
+    window.removeEventListener("pointerup", stopPan);
   };
 
   topologyStage.addEventListener("pointerdown", (event) => {
     const nodeEl = event.target.closest(".topology-node");
-    if (!nodeEl) return;
-    if (!isTopologyEditMode) return;
+    if (nodeEl) {
+      if (!isTopologyEditMode) return;
+      event.preventDefault();
+      activeDragId = nodeEl.dataset.id;
+      activePointerId = event.pointerId;
+      nodeEl.setPointerCapture(activePointerId);
+      window.addEventListener("pointermove", handlePointerMove);
+      window.addEventListener("pointerup", stopInteraction);
+      return;
+    }
     event.preventDefault();
-    activeDragId = nodeEl.dataset.id;
-    activePointerId = event.pointerId;
-    nodeEl.setPointerCapture(activePointerId);
-    window.addEventListener("pointermove", handlePointerMove);
-    window.addEventListener("pointerup", stopDrag);
+    isPanning = true;
+    topologyStage.classList.add("is-panning");
+    panStartX = event.clientX;
+    panStartY = event.clientY;
+    panOriginX = topologyView.offsetX;
+    panOriginY = topologyView.offsetY;
+    window.addEventListener("pointermove", handlePanMove);
+    window.addEventListener("pointerup", stopPan);
   });
 
-  topologyStage.addEventListener("pointerleave", stopDrag);
+  topologyStage.addEventListener("pointerleave", () => {
+    stopInteraction();
+    stopPan();
+  });
+
+  topologyStage.addEventListener("wheel", (event) => {
+    event.preventDefault();
+    const bounds = topologyStage.getBoundingClientRect();
+    const pointerX = event.clientX - bounds.left;
+    const pointerY = event.clientY - bounds.top;
+    const zoomFactor = event.deltaY < 0 ? 1.1 : 0.9;
+    const nextScale = Math.min(2.2, Math.max(0.6, topologyView.scale * zoomFactor));
+    const scaleRatio = nextScale / topologyView.scale;
+    topologyView.offsetX = pointerX - (pointerX - topologyView.offsetX) * scaleRatio;
+    topologyView.offsetY = pointerY - (pointerY - topologyView.offsetY) * scaleRatio;
+    topologyView.scale = nextScale;
+    applyTopologyTransform();
+  });
 }
 
 if (topologyEditToggle) {
@@ -795,6 +863,10 @@ if (topologyClearLinks) {
     selectedLinkNodeId = null;
     renderTopology();
   });
+}
+
+if (topologyViewReset) {
+  topologyViewReset.addEventListener("click", resetTopologyView);
 }
 
 topologyTabs.forEach((tab) => {

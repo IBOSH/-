@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NetWatch | Мониторинг сети</title>
+  <title>Центр контроля | Мониторинг сети</title>
   <link rel="stylesheet" href="styles.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -15,8 +15,8 @@
       <div class="logo">
         <span class="logo-mark"></span>
         <div>
-          <p class="logo-title">NetWatch</p>
-          <p class="logo-subtitle">Zabbix-style</p>
+          <p class="logo-title">Центр контроля</p>
+          <p class="logo-subtitle">Network Command</p>
         </div>
       </div>
       <nav class="nav">
@@ -40,8 +40,8 @@
     <main class="content">
       <header class="topbar">
         <div>
-          <p class="page-title">Сводка сети</p>
-          <p class="page-subtitle">Производительность инфраструктуры за последние 24 часа</p>
+        <p class="page-title">Центр контроля сети</p>
+        <p class="page-subtitle">250 коммутаторов • 600 IP-телефонов • живые пинги</p>
         </div>
         <div class="topbar-actions">
           <button class="ghost">Экспорт</button>
@@ -51,13 +51,18 @@
 
       <section class="kpi-grid">
         <article class="kpi-card">
-          <p class="kpi-title">Доступность</p>
+          <p class="kpi-title">Инфраструктура</p>
+          <p class="kpi-value">850 устройств</p>
+          <p class="kpi-meta success">Коммутаторы + телефония</p>
+        </article>
+        <article class="kpi-card">
+          <p class="kpi-title">Доступность сети</p>
           <p class="kpi-value">99.98%</p>
           <p class="kpi-meta success">+0.03% к вчера</p>
         </article>
         <article class="kpi-card">
           <p class="kpi-title">Средняя задержка</p>
-          <p class="kpi-value">18 мс</p>
+          <p class="kpi-value">16 мс</p>
           <p class="kpi-meta warning">+2 мс к вчера</p>
         </article>
         <article class="kpi-card">
@@ -67,8 +72,18 @@
         </article>
         <article class="kpi-card">
           <p class="kpi-title">Инциденты</p>
-          <p class="kpi-value">3</p>
+          <p class="kpi-value">5</p>
           <p class="kpi-meta danger">2 критичных</p>
+        </article>
+        <article class="kpi-card">
+          <p class="kpi-title">Коммутаторы</p>
+          <p class="kpi-value">250</p>
+          <p class="kpi-meta success">238 онлайн</p>
+        </article>
+        <article class="kpi-card">
+          <p class="kpi-title">IP телефоны</p>
+          <p class="kpi-value">600</p>
+          <p class="kpi-meta warning">12 офлайн</p>
         </article>
       </section>
 
@@ -88,7 +103,15 @@
                   <stop offset="0%" stop-color="#60a5fa" stop-opacity="0.5" />
                   <stop offset="100%" stop-color="#60a5fa" stop-opacity="0" />
                 </linearGradient>
+                <linearGradient id="traffic-2" x1="0" x2="0" y1="0" y2="1">
+                  <stop offset="0%" stop-color="#2dd4bf" stop-opacity="0.45" />
+                  <stop offset="100%" stop-color="#2dd4bf" stop-opacity="0" />
+                </linearGradient>
               </defs>
+              <path
+                d="M0 200 C 50 170, 110 150, 170 160 C 230 170, 280 130, 340 120 C 400 110, 470 90, 540 110 C 600 130, 640 110, 640 110 L 640 220 L 0 220 Z"
+                fill="url(#traffic-2)"
+              />
               <path
                 d="M0 180 C 60 150, 120 120, 180 130 C 240 140, 300 80, 360 90 C 420 100, 480 60, 540 70 C 600 80, 640 40, 640 40 L 640 220 L 0 220 Z"
                 fill="url(#traffic)"
@@ -150,39 +173,81 @@
               <span class="badge danger">Critical</span>
             </div>
           </div>
+          <div class="mini-metrics">
+            <div>
+              <p class="mini-label">Коммутаторы онлайн</p>
+              <p class="mini-value">247 / 250</p>
+            </div>
+            <div>
+              <p class="mini-label">IP-телефоны</p>
+              <p class="mini-value">597 / 600</p>
+            </div>
+          </div>
         </article>
 
         <article class="card span-8">
           <div class="card-header">
             <div>
               <p class="card-title">Топология нагрузки</p>
-              <p class="card-subtitle">Кластеры и задержки</p>
+              <p class="card-subtitle">Графическая карта коммутаторов</p>
             </div>
           </div>
-          <div class="topology">
-            <div class="node core">Core</div>
-            <div class="node edge">Edge West</div>
-            <div class="node edge">Edge East</div>
-            <div class="node edge">Edge South</div>
-            <div class="node edge">Edge North</div>
-            <div class="connector"></div>
+          <div class="topology-graph">
+            <svg viewBox="0 0 720 320" aria-label="Графическая карта коммутаторов">
+              <defs>
+                <linearGradient id="glow" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#60a5fa" stop-opacity="0.7" />
+                  <stop offset="100%" stop-color="#1d4ed8" stop-opacity="0.2" />
+                </linearGradient>
+              </defs>
+              <rect x="16" y="16" width="688" height="288" rx="22" fill="rgba(15, 23, 42, 0.65)" stroke="rgba(96, 165, 250, 0.2)" />
+              <line x1="360" y1="90" x2="140" y2="160" class="link-core" />
+              <line x1="360" y1="90" x2="360" y2="220" class="link-core" />
+              <line x1="360" y1="90" x2="580" y2="160" class="link-core" />
+              <line x1="140" y1="160" x2="80" y2="240" class="link-access" />
+              <line x1="140" y1="160" x2="200" y2="240" class="link-access" />
+              <line x1="580" y1="160" x2="520" y2="240" class="link-access" />
+              <line x1="580" y1="160" x2="640" y2="240" class="link-alert" />
+              <circle cx="360" cy="90" r="30" fill="url(#glow)" />
+              <circle cx="140" cy="160" r="22" fill="rgba(96, 165, 250, 0.35)" />
+              <circle cx="580" cy="160" r="22" fill="rgba(96, 165, 250, 0.35)" />
+              <circle cx="360" cy="220" r="22" fill="rgba(34, 197, 94, 0.35)" />
+              <circle cx="80" cy="240" r="16" fill="rgba(34, 197, 94, 0.25)" />
+              <circle cx="200" cy="240" r="16" fill="rgba(251, 191, 36, 0.25)" />
+              <circle cx="520" cy="240" r="16" fill="rgba(34, 197, 94, 0.25)" />
+              <circle cx="640" cy="240" r="16" fill="rgba(248, 113, 113, 0.35)" />
+              <rect x="40" y="120" width="36" height="22" rx="6" class="phone-node" />
+              <rect x="70" y="140" width="36" height="22" rx="6" class="phone-node" />
+              <rect x="620" y="120" width="36" height="22" rx="6" class="phone-node" />
+              <rect x="590" y="140" width="36" height="22" rx="6" class="phone-node" />
+              <text x="360" y="95" text-anchor="middle" fill="#e2e8f0" font-size="14" font-weight="600">CORE-SW</text>
+              <text x="140" y="165" text-anchor="middle" fill="#e2e8f0" font-size="12">SW-101</text>
+              <text x="580" y="165" text-anchor="middle" fill="#e2e8f0" font-size="12">SW-205</text>
+              <text x="360" y="225" text-anchor="middle" fill="#e2e8f0" font-size="12">SW-312</text>
+              <text x="80" y="245" text-anchor="middle" fill="#e2e8f0" font-size="10">SW-041</text>
+              <text x="200" y="245" text-anchor="middle" fill="#e2e8f0" font-size="10">SW-087</text>
+              <text x="520" y="245" text-anchor="middle" fill="#e2e8f0" font-size="10">SW-442</text>
+              <text x="640" y="245" text-anchor="middle" fill="#e2e8f0" font-size="10">SW-509</text>
+              <text x="70" y="135" text-anchor="middle" fill="#f8fafc" font-size="9">IP</text>
+              <text x="610" y="135" text-anchor="middle" fill="#f8fafc" font-size="9">IP</text>
+            </svg>
           </div>
           <div class="latency-grid">
             <div>
-              <p class="latency-title">Core ↔ West</p>
-              <p class="latency-value">12 мс</p>
+              <p class="latency-title">CORE ↔ SW-101</p>
+              <p class="latency-value">11 мс</p>
             </div>
             <div>
-              <p class="latency-title">Core ↔ East</p>
-              <p class="latency-value">19 мс</p>
+              <p class="latency-title">CORE ↔ SW-205</p>
+              <p class="latency-value">15 мс</p>
             </div>
             <div>
-              <p class="latency-title">Core ↔ South</p>
-              <p class="latency-value">23 мс</p>
+              <p class="latency-title">CORE ↔ SW-312</p>
+              <p class="latency-value">13 мс</p>
             </div>
             <div>
-              <p class="latency-title">Core ↔ North</p>
-              <p class="latency-value">16 мс</p>
+              <p class="latency-title">SW-205 ↔ SW-509</p>
+              <p class="latency-value danger-text">timeout</p>
             </div>
           </div>
         </article>
@@ -191,29 +256,144 @@
           <div class="card-header">
             <div>
               <p class="card-title">Пинг критичных узлов</p>
-              <p class="card-subtitle">За последние 5 минут</p>
+              <p class="card-subtitle">Живые пинги</p>
             </div>
           </div>
-          <div class="ping-list">
+          <div class="ping-list" id="ping-list">
             <div class="ping-item">
-              <span>gw-core-01</span>
-              <span class="pill success">14 мс</span>
+              <span>SW-101</span>
+              <span class="pill success">12 мс</span>
             </div>
             <div class="ping-item">
-              <span>db-edge-04</span>
-              <span class="pill warning">33 мс</span>
+              <span>SW-205</span>
+              <span class="pill warning">28 мс</span>
             </div>
             <div class="ping-item">
-              <span>api-core-07</span>
-              <span class="pill success">18 мс</span>
+              <span>SW-312</span>
+              <span class="pill success">15 мс</span>
             </div>
             <div class="ping-item">
-              <span>vpn-gw-02</span>
+              <span>SW-509</span>
               <span class="pill danger">timeout</span>
             </div>
             <div class="ping-item">
-              <span>cdn-edge-11</span>
-              <span class="pill success">21 мс</span>
+              <span>IP-PHONE-128</span>
+              <span class="pill success">19 мс</span>
+            </div>
+          </div>
+          <div class="sparkline">
+            <svg viewBox="0 0 200 60" preserveAspectRatio="none">
+              <path d="M0 44 L20 34 L40 38 L60 26 L80 30 L100 22 L120 28 L140 16 L160 20 L180 14 L200 18" />
+            </svg>
+            <p class="sparkline-label">Средний пинг узлов: 19 мс</p>
+          </div>
+        </article>
+
+        <article class="card span-6">
+          <div class="card-header">
+            <div>
+              <p class="card-title">Качество VoIP</p>
+              <p class="card-subtitle">MOS и потери пакетов</p>
+            </div>
+            <span class="pill">Live</span>
+          </div>
+          <div class="voice-chart">
+            <div class="ring">
+              <svg viewBox="0 0 120 120">
+                <circle cx="60" cy="60" r="46" class="ring-bg" />
+                <circle cx="60" cy="60" r="46" class="ring-progress" />
+              </svg>
+              <div class="ring-label">
+                <p>MOS</p>
+                <strong>4.2</strong>
+              </div>
+            </div>
+            <div class="voice-bars">
+              <div class="bar">
+                <span>Потери</span>
+                <div class="bar-track"><div class="bar-fill warning" style="width: 32%;"></div></div>
+                <span>0.9%</span>
+              </div>
+              <div class="bar">
+                <span>Джиттер</span>
+                <div class="bar-track"><div class="bar-fill success" style="width: 18%;"></div></div>
+                <span>3.1 мс</span>
+              </div>
+              <div class="bar">
+                <span>Задержка</span>
+                <div class="bar-track"><div class="bar-fill accent" style="width: 44%;"></div></div>
+                <span>21 мс</span>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="card span-6">
+          <div class="card-header">
+            <div>
+              <p class="card-title">Каналы связи</p>
+              <p class="card-subtitle">Загрузка и резервирование</p>
+            </div>
+            <span class="pill">Up</span>
+          </div>
+          <div class="link-grid">
+            <div class="link-card">
+              <p>Core ↔ DC1</p>
+              <div class="link-meter"><span style="width: 68%"></span></div>
+              <p class="link-meta">8.1 Gbps • 68%</p>
+            </div>
+            <div class="link-card">
+              <p>DC1 ↔ Branch</p>
+              <div class="link-meter"><span style="width: 52%"></span></div>
+              <p class="link-meta">5.2 Gbps • 52%</p>
+            </div>
+            <div class="link-card">
+              <p>Voice MPLS</p>
+              <div class="link-meter warning"><span style="width: 76%"></span></div>
+              <p class="link-meta">3.9 Gbps • 76%</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="card span-12">
+          <div class="card-header">
+            <div>
+              <p class="card-title">Карта распределения устройств</p>
+              <p class="card-subtitle">Коммутаторы, телефония и каналы доступа</p>
+            </div>
+            <span class="pill">Live map</span>
+          </div>
+          <div class="network-map">
+            <div class="map-overlay">
+              <p>Сегменты: Core, Access, Voice</p>
+              <p>Всего каналов: 14 • Загрузка 68%</p>
+            </div>
+            <svg viewBox="0 0 720 260" preserveAspectRatio="none">
+              <defs>
+                <radialGradient id="mapGlow" cx="50%" cy="30%" r="60%">
+                  <stop offset="0%" stop-color="#60a5fa" stop-opacity="0.35" />
+                  <stop offset="100%" stop-color="#111a2e" stop-opacity="0" />
+                </radialGradient>
+              </defs>
+              <rect width="720" height="260" fill="url(#mapGlow)" />
+              <path class="map-line" d="M40 60 L200 40 L360 70 L520 50 L680 80" />
+              <path class="map-line success" d="M120 200 L260 170 L420 190 L600 150" />
+              <path class="map-line warning" d="M80 120 L240 110 L400 140 L560 120 L680 140" />
+              <circle cx="200" cy="40" r="18" class="map-node core" />
+              <circle cx="360" cy="70" r="16" class="map-node core" />
+              <circle cx="520" cy="50" r="16" class="map-node core" />
+              <circle cx="120" cy="200" r="14" class="map-node access" />
+              <circle cx="260" cy="170" r="14" class="map-node access" />
+              <circle cx="420" cy="190" r="14" class="map-node access" />
+              <circle cx="600" cy="150" r="14" class="map-node access" />
+              <rect x="640" y="30" width="50" height="24" rx="8" class="map-phone" />
+              <rect x="40" y="160" width="50" height="24" rx="8" class="map-phone" />
+              <rect x="90" y="90" width="50" height="24" rx="8" class="map-phone" />
+            </svg>
+            <div class="map-legend">
+              <div><span class="dot blue"></span> Core</div>
+              <div><span class="dot teal"></span> Access</div>
+              <div><span class="dot orange"></span> Voice</div>
             </div>
           </div>
         </article>
@@ -230,7 +410,7 @@
             <div class="event-row">
               <div class="event-indicator danger"></div>
               <div>
-                <p class="event-title">Timeout на vpn-gw-02</p>
+                <p class="event-title">Timeout на SW-509</p>
                 <p class="event-meta">Критично • 2 минуты назад</p>
               </div>
               <div class="event-actions">
@@ -241,7 +421,7 @@
             <div class="event-row">
               <div class="event-indicator warning"></div>
               <div>
-                <p class="event-title">Повышенная задержка Berlin POP</p>
+                <p class="event-title">Потери пакетов в зоне Moscow-DC1</p>
                 <p class="event-meta">Предупреждение • 14 минут назад</p>
               </div>
               <div class="event-actions">
@@ -252,7 +432,7 @@
             <div class="event-row">
               <div class="event-indicator success"></div>
               <div>
-                <p class="event-title">Резервная линия активирована</p>
+                <p class="event-title">Восстановлена линия SW-312 ↔ CORE</p>
                 <p class="event-meta">Инфо • 35 минут назад</p>
               </div>
               <div class="event-actions">

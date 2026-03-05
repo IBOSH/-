@@ -315,6 +315,21 @@
             </select>
             <button class="primary" type="submit">Добавить устройство</button>
           </form>
+          <div class="device-filters">
+            <input
+              type="search"
+              id="device-search"
+              class="device-search"
+              placeholder="Поиск по имени или IP"
+              data-i18n-placeholder="inventory.searchPlaceholder"
+            />
+            <div class="status-filters" role="group" aria-label="Фильтр по статусу">
+              <button class="ghost small status-filter active" type="button" data-status-filter="all" data-i18n="inventory.filterAll">Все</button>
+              <button class="ghost small status-filter" type="button" data-status-filter="online" data-i18n="inventory.filterOnline">Онлайн</button>
+              <button class="ghost small status-filter" type="button" data-status-filter="warning" data-i18n="inventory.filterWarning">Предупреждение</button>
+              <button class="ghost small status-filter" type="button" data-status-filter="offline" data-i18n="inventory.filterOffline">Оффлайн</button>
+            </div>
+          </div>
           <div class="device-table" id="device-table" aria-live="polite"></div>
         </article>
 

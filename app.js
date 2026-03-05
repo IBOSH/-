@@ -3,6 +3,8 @@ const pingList = document.getElementById("ping-list");
 const deviceTable = document.getElementById("device-table");
 const deviceTableNodes = document.getElementById("device-table-nodes");
 const deviceForm = document.getElementById("device-form");
+const deviceSearchInput = document.getElementById("device-search");
+const statusFilterButtons = document.querySelectorAll(".status-filter");
 const categoryTabs = document.querySelectorAll(".tab");
 const navLinks = document.querySelectorAll(".nav-link");
 const sections = document.querySelectorAll(".page-section");
@@ -140,6 +142,11 @@ const translations = {
     "nodes.subtitle": "Список устройств и групп",
     "inventory.title": "Инвентарь устройств",
     "inventory.subtitle": "Доступно через таблицу на дашборде",
+    "inventory.searchPlaceholder": "Поиск по имени или IP",
+    "inventory.filterAll": "Все",
+    "inventory.filterOnline": "Онлайн",
+    "inventory.filterWarning": "Предупреждение",
+    "inventory.filterOffline": "Оффлайн",
     "topology.title": "Топология",
     "topology.subtitle": "Соберите схему сети и наблюдайте за связями",
     "topology.edit": "Редактировать",
@@ -253,6 +260,11 @@ const translations = {
     "nodes.subtitle": "Qurilmalar va guruhlar ro‘yxati",
     "inventory.title": "Qurilmalar inventari",
     "inventory.subtitle": "Paneldagi jadval orqali mavjud",
+    "inventory.searchPlaceholder": "Nomi yoki IP bo‘yicha qidirish",
+    "inventory.filterAll": "Barchasi",
+    "inventory.filterOnline": "Onlayn",
+    "inventory.filterWarning": "Ogohlantirish",
+    "inventory.filterOffline": "Oflayn",
     "topology.title": "Topologiya",
     "topology.subtitle": "Tarmoq sxemasini yig‘ing va bog‘lanishlarni kuzating",
     "topology.edit": "Tahrirlash",
@@ -356,6 +368,8 @@ const topologyData = {
 };
 
 let activeCategory = "all";
+let activeStatusFilter = "all";
+let deviceSearchQuery = "";
 let activeTopologyKey = "rju-1";
 let isTopologyEditMode = false;
 let isTopologyLinkMode = false;
@@ -394,11 +408,26 @@ const buildDeviceTable = (rows, target) => {
 };
 
 const renderDeviceTable = () => {
-  const rows = devices.filter(
-    (device) => activeCategory === "all" || device.category === activeCategory
-  );
+  const query = deviceSearchQuery.trim().toLowerCase();
+  const rows = devices.filter((device) => {
+    const byCategory = activeCategory === "all" || device.category === activeCategory;
+    const byStatus = activeStatusFilter === "all" || device.status === activeStatusFilter;
+    const byQuery =
+      !query ||
+      device.name.toLowerCase().includes(query) ||
+      device.ip.toLowerCase().includes(query);
+    return byCategory && byStatus && byQuery;
+  });
   buildDeviceTable(rows, deviceTable);
   buildDeviceTable(rows, deviceTableNodes);
+};
+
+const setStatusFilter = (status) => {
+  activeStatusFilter = status;
+  statusFilterButtons.forEach((button) => {
+    button.classList.toggle("active", button.dataset.statusFilter === status);
+  });
+  renderDeviceTable();
 };
 
 const setActiveCategory = (category) => {
@@ -646,6 +675,19 @@ categoryTabs.forEach((tab) => {
     setActiveCategory(tab.dataset.category);
   });
 });
+
+statusFilterButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    setStatusFilter(button.dataset.statusFilter || "all");
+  });
+});
+
+if (deviceSearchInput) {
+  deviceSearchInput.addEventListener("input", (event) => {
+    deviceSearchQuery = event.target.value;
+    renderDeviceTable();
+  });
+}
 
 if (deviceForm) {
   deviceForm.addEventListener("submit", (event) => {

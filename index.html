@@ -570,12 +570,13 @@
               <option value="rju-5">РЖУ-5</option>
               <option value="rju-6">РЖУ-6</option>
             </select>
-            <button class="ghost" type="button" data-i18n="actions.import">Импорт</button>
+            <button class="ghost" type="button" id="topology-import-btn" data-i18n="actions.import">Импорт</button>
+            <button class="ghost" type="button" id="topology-export-btn" data-i18n="actions.export">Экспорт</button>
             <button class="ghost" type="button" id="topology-edit-toggle" data-i18n="topology.edit">Редактировать</button>
             <button class="ghost" type="button" id="topology-link-toggle" data-i18n="topology.linksOff">Линии: выкл</button>
             <button class="ghost" type="button" id="topology-clear-links" data-i18n="topology.clearLinks">Очистить линии</button>
             <button class="ghost" type="button" id="topology-view-reset" data-i18n="topology.viewReset">Сброс вида</button>
-            <button class="primary" type="button" data-i18n="topology.save">Сохранить схему</button>
+            <button class="primary" type="button" id="topology-save-btn" data-i18n="topology.save">Сохранить схему</button>
           </div>
         </header>
         <div class="topology-layout">
@@ -654,6 +655,9 @@
           </div>
         </div>
       </section>
+
+
+        <input type="file" id="topology-import-file" accept="application/json" hidden />
 
       <section class="page-section" id="events" data-section="events">
         <header class="topbar">

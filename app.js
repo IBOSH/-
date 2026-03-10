@@ -25,6 +25,10 @@ const topologyEditToggle = document.getElementById("topology-edit-toggle");
 const topologyLinkToggle = document.getElementById("topology-link-toggle");
 const topologyClearLinks = document.getElementById("topology-clear-links");
 const topologyViewReset = document.getElementById("topology-view-reset");
+const topologySaveBtn = document.getElementById("topology-save-btn");
+const topologyExportBtn = document.getElementById("topology-export-btn");
+const topologyImportBtn = document.getElementById("topology-import-btn");
+const topologyImportFile = document.getElementById("topology-import-file");
 const topologyStageLayers = new Map();
 
 const formatTime = (date) =>
@@ -365,6 +369,65 @@ const topologyData = {
   "rju-4": { label: "РЖУ-4", nodes: buildTopologyNodes("rju-4", -10, -2), links: [] },
   "rju-5": { label: "РЖУ-5", nodes: buildTopologyNodes("rju-5", 8, 6), links: [] },
   "rju-6": { label: "РЖУ-6", nodes: buildTopologyNodes("rju-6", 2, 10), links: [] },
+};
+
+const TOPOLOGY_STORAGE_KEY = "topology-data-v1";
+
+
+const cloneNode = (node) => ({
+  id: node.id,
+  name: node.name,
+  type: node.type,
+  zone: node.zone,
+  x: Number(node.x),
+  y: Number(node.y),
+});
+
+const cloneLink = (link) => ({
+  from: link.from,
+  to: link.to,
+  type: link.type,
+});
+
+const saveTopologyState = () => {
+  const payload = Object.fromEntries(
+    Object.entries(topologyData).map(([key, value]) => [
+      key,
+      {
+        nodes: value.nodes.map(cloneNode),
+        links: value.links.map(cloneLink),
+      },
+    ])
+  );
+  localStorage.setItem(TOPOLOGY_STORAGE_KEY, JSON.stringify(payload));
+};
+
+const loadTopologyState = () => {
+  const raw = localStorage.getItem(TOPOLOGY_STORAGE_KEY);
+  if (!raw) return;
+  try {
+    const parsed = JSON.parse(raw);
+    Object.keys(topologyData).forEach((key) => {
+      const section = parsed[key];
+      if (!section || !Array.isArray(section.nodes) || !Array.isArray(section.links)) return;
+      topologyData[key].nodes = section.nodes.map(cloneNode);
+      topologyData[key].links = section.links.map(cloneLink);
+    });
+  } catch (error) {
+    console.error("Failed to load topology state", error);
+  }
+};
+
+const importTopologyState = (parsed) => {
+  Object.keys(topologyData).forEach((key) => {
+    const section = parsed[key];
+    if (!section || !Array.isArray(section.nodes) || !Array.isArray(section.links)) return;
+    topologyData[key].nodes = section.nodes.map(cloneNode);
+    topologyData[key].links = section.links.map(cloneLink);
+  });
+  saveTopologyState();
+  syncLinkOptions();
+  renderTopology();
 };
 
 let activeCategory = "all";
@@ -722,6 +785,7 @@ if (topologyNodeForm) {
     topologyNodeForm.reset();
     syncLinkOptions();
     renderTopology();
+    saveTopologyState();
   });
 }
 
@@ -739,6 +803,7 @@ if (topologyLinkForm) {
     topologyLinkForm.reset();
     syncLinkOptions();
     renderTopology();
+    saveTopologyState();
   });
 }
 
@@ -774,6 +839,7 @@ if (topologyStage) {
     activePointerId = null;
     window.removeEventListener("pointermove", handlePointerMove);
     window.removeEventListener("pointerup", stopInteraction);
+    saveTopologyState();
   };
 
   const handlePanMove = (event) => {
@@ -875,6 +941,7 @@ if (topologyStage) {
     selectedLinkNodeId = null;
     syncLinkOptions();
     renderTopology();
+    saveTopologyState();
   });
 }
 
@@ -904,11 +971,51 @@ if (topologyClearLinks) {
     topologyLinks.length = 0;
     selectedLinkNodeId = null;
     renderTopology();
+    saveTopologyState();
   });
 }
 
 if (topologyViewReset) {
   topologyViewReset.addEventListener("click", resetTopologyView);
+}
+
+if (topologySaveBtn) {
+  topologySaveBtn.addEventListener("click", saveTopologyState);
+}
+
+if (topologyExportBtn) {
+  topologyExportBtn.addEventListener("click", () => {
+    const payload = Object.fromEntries(
+      Object.entries(topologyData).map(([key, value]) => [
+        key,
+        { nodes: value.nodes.map(cloneNode), links: value.links.map(cloneLink) },
+      ])
+    );
+    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `topology-${Date.now()}.json`;
+    link.click();
+    URL.revokeObjectURL(url);
+  });
+}
+
+if (topologyImportBtn && topologyImportFile) {
+  topologyImportBtn.addEventListener("click", () => topologyImportFile.click());
+  topologyImportFile.addEventListener("change", async (event) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    try {
+      const text = await file.text();
+      const parsed = JSON.parse(text);
+      importTopologyState(parsed);
+    } catch (error) {
+      console.error("Failed to import topology", error);
+    } finally {
+      topologyImportFile.value = "";
+    }
+  });
 }
 
 topologyTabs.forEach((tab) => {
@@ -968,6 +1075,8 @@ const resolveSectionFromHash = () => {
 
 window.addEventListener("hashchange", resolveSectionFromHash);
 resolveSectionFromHash();
+
+loadTopologyState();
 
 const storedLanguage = localStorage.getItem("language");
 const storedTheme = localStorage.getItem("theme");

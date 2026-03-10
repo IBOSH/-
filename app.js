@@ -16,6 +16,8 @@ const topologyAreaSelect = document.getElementById("topology-area-select");
 const topologyStage = document.getElementById("topology-stage");
 const languageSelect = document.getElementById("language-select");
 const themeSelect = document.getElementById("theme-select");
+const roleSelect = document.getElementById("role-select");
+const roleHint = document.getElementById("role-hint");
 const topologyNodeForm = document.getElementById("topology-node-form");
 const topologyLinkForm = document.getElementById("topology-link-form");
 const topologyNodeList = document.getElementById("topology-node-list");
@@ -102,6 +104,13 @@ const translations = {
     "sidebar.statusActive": "Активен",
     "sidebar.languageLabel": "Язык",
     "sidebar.themeLabel": "Тема",
+    "sidebar.roleLabel": "Роль",
+    "roles.viewer": "Viewer",
+    "roles.operator": "Operator",
+    "roles.admin": "Admin",
+    "roles.hintViewer": "Только просмотр",
+    "roles.hintOperator": "Редактирование без импорта",
+    "roles.hintAdmin": "Полный доступ",
     "dashboard.title": "Центр контроля сети",
     "dashboard.subtitle": "250 коммутаторов • 600 IP-телефонов • живые пинги",
     "actions.export": "Экспорт",
@@ -224,6 +233,13 @@ const translations = {
     "sidebar.statusActive": "Faol",
     "sidebar.languageLabel": "Til",
     "sidebar.themeLabel": "Mavzu",
+    "sidebar.roleLabel": "Rol",
+    "roles.viewer": "Viewer",
+    "roles.operator": "Operator",
+    "roles.admin": "Admin",
+    "roles.hintViewer": "Faqat ko‘rish",
+    "roles.hintOperator": "Importsiz tahrirlash",
+    "roles.hintAdmin": "To‘liq ruxsat",
     "dashboard.title": "Tarmoq nazorat markazi",
     "dashboard.subtitle": "250 kommutator • 600 IP-telefon • jonli pinglar",
     "actions.export": "Eksport",
@@ -445,6 +461,7 @@ let activeStatusFilter = "all";
 let deviceSearchQuery = "";
 let activeTopologyKey = "rju-1";
 let activeEventFilter = "all";
+let currentRole = "admin";
 let isTopologyEditMode = false;
 let isTopologyLinkMode = false;
 let selectedLinkNodeId = null;
@@ -729,6 +746,75 @@ const applyTranslations = () => {
   updateTopologyToggleLabels();
   renderDeviceTable();
   renderTopology();
+  applyRolePermissions();
+};
+
+const rolePermissions = {
+  viewer: {
+    manageDevices: false,
+    editTopology: false,
+    importTopology: false,
+    saveTopology: false,
+  },
+  operator: {
+    manageDevices: true,
+    editTopology: true,
+    importTopology: false,
+    saveTopology: true,
+  },
+  admin: {
+    manageDevices: true,
+    editTopology: true,
+    importTopology: true,
+    saveTopology: true,
+  },
+};
+
+const can = (action) => Boolean(rolePermissions[currentRole]?.[action]);
+
+const setControlEnabled = (element, enabled) => {
+  if (!element) return;
+  element.disabled = !enabled;
+  element.classList.toggle("is-disabled", !enabled);
+};
+
+const applyRolePermissions = () => {
+  setControlEnabled(deviceForm?.querySelector('button[type="submit"]'), can("manageDevices"));
+  deviceForm?.querySelectorAll("input, select").forEach((el) => {
+    if (el.type === "submit") return;
+    el.disabled = !can("manageDevices");
+  });
+
+  setControlEnabled(topologyEditToggle, can("editTopology"));
+  setControlEnabled(topologyLinkToggle, can("editTopology"));
+  setControlEnabled(topologyClearLinks, can("editTopology"));
+  setControlEnabled(topologySaveBtn, can("saveTopology"));
+  setControlEnabled(topologyImportBtn, can("importTopology"));
+
+  topologyNodeForm?.querySelectorAll("input, select, button").forEach((el) => {
+    el.disabled = !can("editTopology");
+  });
+  topologyLinkForm?.querySelectorAll("select, button").forEach((el) => {
+    el.disabled = !can("editTopology");
+  });
+
+  if (roleHint) {
+    const key =
+      currentRole === "admin"
+        ? "roles.hintAdmin"
+        : currentRole === "operator"
+          ? "roles.hintOperator"
+          : "roles.hintViewer";
+    roleHint.textContent = translate(key);
+  }
+};
+
+const setRole = (role) => {
+  const nextRole = rolePermissions[role] ? role : "admin";
+  currentRole = nextRole;
+  localStorage.setItem("role", nextRole);
+  if (roleSelect) roleSelect.value = nextRole;
+  applyRolePermissions();
 };
 
 const setTheme = (theme) => {
@@ -789,6 +875,7 @@ if (deviceSearchInput) {
 if (deviceForm) {
   deviceForm.addEventListener("submit", (event) => {
     event.preventDefault();
+    if (!can("manageDevices")) return;
     const formData = new FormData(deviceForm);
     const newDevice = {
       name: formData.get("name").trim(),
@@ -806,6 +893,7 @@ if (deviceForm) {
 if (topologyNodeForm) {
   topologyNodeForm.addEventListener("submit", (event) => {
     event.preventDefault();
+    if (!can("editTopology")) return;
     const topologyNodes = getActiveNodes();
     const formData = new FormData(topologyNodeForm);
     const name = formData.get("name").trim();
@@ -826,6 +914,7 @@ if (topologyNodeForm) {
 if (topologyLinkForm) {
   topologyLinkForm.addEventListener("submit", (event) => {
     event.preventDefault();
+    if (!can("editTopology")) return;
     const topologyLinks = getActiveLinks();
     const formData = new FormData(topologyLinkForm);
     const from = formData.get("from");
@@ -894,7 +983,7 @@ if (topologyStage) {
   topologyStage.addEventListener("pointerdown", (event) => {
     const nodeEl = event.target.closest(".topology-node");
     if (nodeEl) {
-      if (!isTopologyEditMode) return;
+      if (!isTopologyEditMode || !can("editTopology")) return;
       event.preventDefault();
       activeDragId = nodeEl.dataset.id;
       activePointerId = event.pointerId;
@@ -952,7 +1041,7 @@ if (topologyEditToggle) {
 
 if (topologyStage) {
   topologyStage.addEventListener("click", (event) => {
-    if (!isTopologyEditMode || !isTopologyLinkMode) return;
+    if (!isTopologyEditMode || !isTopologyLinkMode || !can("editTopology")) return;
     const nodeEl = event.target.closest(".topology-node");
     if (!nodeEl) return;
     const nodeId = nodeEl.dataset.id;
@@ -988,7 +1077,7 @@ if (topologyLinkForm) {
 
 if (topologyLinkToggle) {
   topologyLinkToggle.addEventListener("click", () => {
-    if (!isTopologyEditMode) return;
+    if (!isTopologyEditMode || !can("editTopology")) return;
     isTopologyLinkMode = !isTopologyLinkMode;
     if (!isTopologyLinkMode) {
       selectedLinkNodeId = null;
@@ -1001,6 +1090,7 @@ if (topologyLinkToggle) {
 
 if (topologyClearLinks) {
   topologyClearLinks.addEventListener("click", () => {
+    if (!can("editTopology")) return;
     const topologyLinks = getActiveLinks();
     topologyLinks.length = 0;
     selectedLinkNodeId = null;
@@ -1014,7 +1104,10 @@ if (topologyViewReset) {
 }
 
 if (topologySaveBtn) {
-  topologySaveBtn.addEventListener("click", saveTopologyState);
+  topologySaveBtn.addEventListener("click", () => {
+    if (!can("saveTopology")) return;
+    saveTopologyState();
+  });
 }
 
 if (topologyExportBtn) {
@@ -1036,7 +1129,10 @@ if (topologyExportBtn) {
 }
 
 if (topologyImportBtn && topologyImportFile) {
-  topologyImportBtn.addEventListener("click", () => topologyImportFile.click());
+  topologyImportBtn.addEventListener("click", () => {
+    if (!can("importTopology")) return;
+    topologyImportFile.click();
+  });
   topologyImportFile.addEventListener("change", async (event) => {
     const file = event.target.files?.[0];
     if (!file) return;
@@ -1073,6 +1169,12 @@ if (languageSelect) {
 if (themeSelect) {
   themeSelect.addEventListener("change", (event) => {
     setTheme(event.target.value);
+  });
+}
+
+if (roleSelect) {
+  roleSelect.addEventListener("change", (event) => {
+    setRole(event.target.value);
   });
 }
 
@@ -1114,8 +1216,10 @@ loadTopologyState();
 
 const storedLanguage = localStorage.getItem("language");
 const storedTheme = localStorage.getItem("theme");
+const storedRole = localStorage.getItem("role");
 setTheme(storedTheme || "dark");
 setLanguage(storedLanguage || "ru");
+setRole(storedRole || "admin");
 setEventFilter("all");
 
 updateTime();

@@ -33,6 +33,13 @@
           <option value="zabbix">Blue Zabbix</option>
           <option value="graphite">Graphite</option>
         </select>
+        <label class="control-label" for="role-select" data-i18n="sidebar.roleLabel">Роль</label>
+        <select id="role-select" class="ghost small" aria-label="Выбор роли">
+          <option value="viewer" data-i18n="roles.viewer">Viewer</option>
+          <option value="operator" data-i18n="roles.operator">Operator</option>
+          <option value="admin" data-i18n="roles.admin">Admin</option>
+        </select>
+        <p class="role-hint" id="role-hint" data-i18n="roles.hintViewer">Только просмотр</p>
       </div>
       <nav class="nav">
         <a class="nav-link active" href="#dashboard" data-section="dashboard" data-i18n="nav.dashboard">Дашборд</a>

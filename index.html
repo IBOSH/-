@@ -665,16 +665,19 @@
             <p class="page-title" data-i18n="events.title">События</p>
             <p class="page-subtitle" data-i18n="events.subtitle">Лента инцидентов и уведомлений</p>
           </div>
-          <div class="topbar-actions">
-            <button class="ghost" data-i18n="actions.filter">Фильтр</button>
+          <div class="topbar-actions events-filters" id="events-filters">
+            <button class="ghost active" type="button" data-event-filter="all" data-i18n="events.filterAll">Все</button>
+            <button class="ghost" type="button" data-event-filter="critical" data-i18n="events.filterCritical">Критично</button>
+            <button class="ghost" type="button" data-event-filter="warning" data-i18n="events.filterWarning">Предупреждение</button>
+            <button class="ghost" type="button" data-event-filter="info" data-i18n="events.filterInfo">Инфо</button>
             <button class="primary" data-i18n="actions.exportCsv">Экспорт CSV</button>
           </div>
         </header>
         <div class="grid">
           <article class="card span-12">
             <p class="card-title" data-i18n="events.recentTitle">Инциденты за 24 часа</p>
-            <div class="event-table">
-              <div class="event-row">
+            <div class="event-table" id="events-table">
+              <div class="event-row" data-severity="critical">
                 <div class="event-indicator danger"></div>
                 <div>
                   <p class="event-title">Потеря связи с SW-509</p>
@@ -685,7 +688,7 @@
                   <button class="primary small">Эскалация</button>
                 </div>
               </div>
-              <div class="event-row">
+              <div class="event-row" data-severity="warning">
                 <div class="event-indicator warning"></div>
                 <div>
                   <p class="event-title">Рост задержки в сегменте Voice</p>
@@ -694,6 +697,16 @@
                 <div class="event-actions">
                   <button class="ghost small">План работ</button>
                   <button class="primary small">Создать тикет</button>
+                </div>
+              </div>
+              <div class="event-row" data-severity="info">
+                <div class="event-indicator success"></div>
+                <div>
+                  <p class="event-title">Восстановлен uplink в зоне РЖУ-2</p>
+                  <p class="event-meta">Инфо • 42 минуты назад</p>
+                </div>
+                <div class="event-actions">
+                  <button class="ghost small">Подробнее</button>
                 </div>
               </div>
             </div>

@@ -5,6 +5,8 @@ const deviceTableNodes = document.getElementById("device-table-nodes");
 const deviceForm = document.getElementById("device-form");
 const deviceSearchInput = document.getElementById("device-search");
 const statusFilterButtons = document.querySelectorAll(".status-filter");
+const eventsFilterButtons = document.querySelectorAll("[data-event-filter]");
+const eventsTable = document.getElementById("events-table");
 const categoryTabs = document.querySelectorAll(".tab");
 const navLinks = document.querySelectorAll(".nav-link");
 const sections = document.querySelectorAll(".page-section");
@@ -181,6 +183,10 @@ const translations = {
     "events.title": "События",
     "events.subtitle": "Лента инцидентов и уведомлений",
     "events.recentTitle": "Инциденты за 24 часа",
+    "events.filterAll": "Все",
+    "events.filterCritical": "Критично",
+    "events.filterWarning": "Предупреждение",
+    "events.filterInfo": "Инфо",
     "reports.title": "Отчёты",
     "reports.subtitle": "Подготовка аналитики и отчётности",
     "settings.title": "Настройки",
@@ -299,6 +305,10 @@ const translations = {
     "events.title": "Hodisalar",
     "events.subtitle": "Hodisalar va bildirishnomalar lentasi",
     "events.recentTitle": "Oxirgi 24 soatdagi hodisalar",
+    "events.filterAll": "Barchasi",
+    "events.filterCritical": "Kritik",
+    "events.filterWarning": "Ogohlantirish",
+    "events.filterInfo": "Info",
     "reports.title": "Hisobotlar",
     "reports.subtitle": "Tahlil va hisobot tayyorlash",
     "settings.title": "Sozlamalar",
@@ -434,6 +444,7 @@ let activeCategory = "all";
 let activeStatusFilter = "all";
 let deviceSearchQuery = "";
 let activeTopologyKey = "rju-1";
+let activeEventFilter = "all";
 let isTopologyEditMode = false;
 let isTopologyLinkMode = false;
 let selectedLinkNodeId = null;
@@ -491,6 +502,23 @@ const setStatusFilter = (status) => {
     button.classList.toggle("active", button.dataset.statusFilter === status);
   });
   renderDeviceTable();
+};
+
+const filterEventsTable = () => {
+  if (!eventsTable) return;
+  const rows = eventsTable.querySelectorAll(".event-row");
+  rows.forEach((row) => {
+    const severity = row.dataset.severity || "info";
+    row.style.display = activeEventFilter === "all" || severity === activeEventFilter ? "grid" : "none";
+  });
+};
+
+const setEventFilter = (severity) => {
+  activeEventFilter = severity;
+  eventsFilterButtons.forEach((button) => {
+    button.classList.toggle("active", button.dataset.eventFilter === severity);
+  });
+  filterEventsTable();
 };
 
 const setActiveCategory = (category) => {
@@ -742,6 +770,12 @@ categoryTabs.forEach((tab) => {
 statusFilterButtons.forEach((button) => {
   button.addEventListener("click", () => {
     setStatusFilter(button.dataset.statusFilter || "all");
+  });
+});
+
+eventsFilterButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    setEventFilter(button.dataset.eventFilter || "all");
   });
 });
 
@@ -1082,6 +1116,7 @@ const storedLanguage = localStorage.getItem("language");
 const storedTheme = localStorage.getItem("theme");
 setTheme(storedTheme || "dark");
 setLanguage(storedLanguage || "ru");
+setEventFilter("all");
 
 updateTime();
 setInterval(updateTime, 1000 * 30);

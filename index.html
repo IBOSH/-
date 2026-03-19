@@ -683,6 +683,79 @@
           </div>
         </header>
         <div class="grid">
+          <article class="card span-4">
+            <div class="card-header compact">
+              <div>
+                <p class="card-title" data-i18n="events.overviewTitle">Командный центр инцидентов</p>
+                <p class="card-subtitle" data-i18n="events.overviewSubtitle">Приоритет, эскалация и восстановление</p>
+              </div>
+              <span class="pill danger" id="incident-open-count">3 open</span>
+            </div>
+            <div class="incident-summary-grid" id="incident-summary-grid">
+              <div class="incident-summary-card critical">
+                <span class="summary-label" data-i18n="events.summaryCritical">Критичные</span>
+                <strong class="summary-value">2</strong>
+                <span class="summary-meta" data-i18n="events.summaryCriticalMeta">1 требует эскалации</span>
+              </div>
+              <div class="incident-summary-card warning">
+                <span class="summary-label" data-i18n="events.summaryWarning">Под наблюдением</span>
+                <strong class="summary-value">5</strong>
+                <span class="summary-meta" data-i18n="events.summaryWarningMeta">voice и access сегменты</span>
+              </div>
+              <div class="incident-summary-card success">
+                <span class="summary-label" data-i18n="events.summaryRecovered">Восстановлено</span>
+                <strong class="summary-value">18</strong>
+                <span class="summary-meta" data-i18n="events.summaryRecoveredMeta">за последние 24 часа</span>
+              </div>
+            </div>
+            <div class="incident-metrics">
+              <div>
+                <p class="mini-label" data-i18n="events.mttrLabel">MTTR</p>
+                <p class="mini-value">18 мин</p>
+              </div>
+              <div>
+                <p class="mini-label" data-i18n="events.slaRiskLabel">Риск SLA</p>
+                <p class="mini-value danger-text">0.14%</p>
+              </div>
+            </div>
+          </article>
+
+          <article class="card span-8">
+            <div class="card-header compact">
+              <div>
+                <p class="card-title" data-i18n="events.queueTitle">Активные инциденты</p>
+                <p class="card-subtitle" data-i18n="events.queueSubtitle">Очередь реагирования по зонам и сервисам</p>
+              </div>
+              <button class="ghost small" type="button" data-i18n="actions.createTicket">Создать тикет</button>
+            </div>
+            <div class="incident-queue" id="incident-queue">
+              <div class="incident-queue-row critical">
+                <div>
+                  <p class="incident-queue-title">SW-509 • uplink down</p>
+                  <p class="incident-queue-meta">РЖУ-4 • Core uplink • 8 минут назад</p>
+                </div>
+                <span class="badge danger">P1</span>
+                <span class="incident-owner">NOC L2</span>
+              </div>
+              <div class="incident-queue-row warning">
+                <div>
+                  <p class="incident-queue-title">Voice VLAN jitter &gt; 30 ms</p>
+                  <p class="incident-queue-meta">РЖУ-1 • телефония • 25 минут назад</p>
+                </div>
+                <span class="badge warning">P2</span>
+                <span class="incident-owner">Voice team</span>
+              </div>
+              <div class="incident-queue-row success">
+                <div>
+                  <p class="incident-queue-title">Uplink failover completed</p>
+                  <p class="incident-queue-meta">РЖУ-2 • резервный канал • 42 минуты назад</p>
+                </div>
+                <span class="badge success">Resolved</span>
+                <span class="incident-owner">Automation</span>
+              </div>
+            </div>
+          </article>
+
           <article class="card span-12">
             <p class="card-title" data-i18n="events.recentTitle">Инциденты за 24 часа</p>
             <div class="event-table" id="events-table">

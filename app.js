@@ -9,6 +9,8 @@ const eventsFilterButtons = document.querySelectorAll("[data-event-filter]");
 const eventsTable = document.getElementById("events-table");
 const eventsLiveToggle = document.getElementById("events-live-toggle");
 const eventsLiveStatus = document.getElementById("events-live-status");
+const incidentQueue = document.getElementById("incident-queue");
+const incidentOpenCount = document.getElementById("incident-open-count");
 const reportsPeriodSelect = document.getElementById("reports-period-select");
 const reportsSlaPath = document.getElementById("reports-sla-path");
 const reportsSlaLabel = document.getElementById("reports-sla-label");
@@ -198,6 +200,18 @@ const translations = {
     "events.title": "События",
     "events.subtitle": "Лента инцидентов и уведомлений",
     "events.recentTitle": "Инциденты за 24 часа",
+    "events.overviewTitle": "Командный центр инцидентов",
+    "events.overviewSubtitle": "Приоритет, эскалация и восстановление",
+    "events.summaryCritical": "Критичные",
+    "events.summaryCriticalMeta": "1 требует эскалации",
+    "events.summaryWarning": "Под наблюдением",
+    "events.summaryWarningMeta": "voice и access сегменты",
+    "events.summaryRecovered": "Восстановлено",
+    "events.summaryRecoveredMeta": "за последние 24 часа",
+    "events.mttrLabel": "MTTR",
+    "events.slaRiskLabel": "Риск SLA",
+    "events.queueTitle": "Активные инциденты",
+    "events.queueSubtitle": "Очередь реагирования по зонам и сервисам",
     "events.filterAll": "Все",
     "events.filterCritical": "Критично",
     "events.filterWarning": "Предупреждение",
@@ -339,6 +353,18 @@ const translations = {
     "events.title": "Hodisalar",
     "events.subtitle": "Hodisalar va bildirishnomalar lentasi",
     "events.recentTitle": "Oxirgi 24 soatdagi hodisalar",
+    "events.overviewTitle": "Hodisalar komand markazi",
+    "events.overviewSubtitle": "Ustuvorlik, eskalatsiya va tiklash",
+    "events.summaryCritical": "Kritik",
+    "events.summaryCriticalMeta": "1 tasi eskalatsiyani kutmoqda",
+    "events.summaryWarning": "Kuzatuvda",
+    "events.summaryWarningMeta": "voice va access segmentlari",
+    "events.summaryRecovered": "Tiklangan",
+    "events.summaryRecoveredMeta": "oxirgi 24 soatda",
+    "events.mttrLabel": "MTTR",
+    "events.slaRiskLabel": "SLA xatari",
+    "events.queueTitle": "Faol hodisalar",
+    "events.queueSubtitle": "Zonalar va servislar bo‘yicha javob navbati",
     "events.filterAll": "Barchasi",
     "events.filterCritical": "Kritik",
     "events.filterWarning": "Ogohlantirish",
@@ -397,6 +423,7 @@ const statusLabels = {
   warning: () => translate("status.warning"),
   offline: () => translate("status.offline"),
 };
+
 
 const baseTopologyNodes = [
   { id: "core-sw", name: "CORE-SW", type: "core", zone: "РЖУ-1", x: 50, y: 14 },
@@ -600,6 +627,14 @@ const buildSparklinePath = (points) => {
       return `${index === 0 ? "M" : "L"}${x.toFixed(2)} ${y.toFixed(2)}`;
     })
     .join(" ");
+};
+
+const renderIncidentSummary = () => {
+  if (!incidentOpenCount || !incidentQueue) return;
+  const rows = incidentQueue.querySelectorAll(".incident-queue-row");
+  const openCount = Array.from(rows).filter((row) => !row.classList.contains("success")).length;
+  incidentOpenCount.textContent = `${openCount} open`;
+  incidentOpenCount.classList.toggle("danger", openCount > 0);
 };
 
 const renderReportsTrend = () => {
@@ -864,6 +899,7 @@ const applyTranslations = () => {
   renderDeviceTable();
   renderTopology();
   renderReportsTrend();
+  renderIncidentSummary();
   applyRolePermissions();
   setLiveEventsEnabled(isLiveEventsEnabled);
   if (eventsLiveStatus && !eventsLiveStatus.textContent.trim()) {
@@ -1365,6 +1401,7 @@ setRole(storedRole || "admin");
 setEventFilter("all");
 setLiveEventsEnabled(true);
 setEventsLiveStatus(translate("events.liveStatus"));
+renderIncidentSummary();
 renderReportsTrend();
 
 updateTime();

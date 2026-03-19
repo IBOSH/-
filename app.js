@@ -7,6 +7,8 @@ const deviceSearchInput = document.getElementById("device-search");
 const statusFilterButtons = document.querySelectorAll(".status-filter");
 const eventsFilterButtons = document.querySelectorAll("[data-event-filter]");
 const eventsTable = document.getElementById("events-table");
+const eventsLiveToggle = document.getElementById("events-live-toggle");
+const eventsLiveStatus = document.getElementById("events-live-status");
 const categoryTabs = document.querySelectorAll(".tab");
 const navLinks = document.querySelectorAll(".nav-link");
 const sections = document.querySelectorAll(".page-section");
@@ -196,6 +198,10 @@ const translations = {
     "events.filterCritical": "Критично",
     "events.filterWarning": "Предупреждение",
     "events.filterInfo": "Инфо",
+    "events.liveOn": "Live: вкл",
+    "events.liveOff": "Live: выкл",
+    "events.liveStatus": "Обновлено только что",
+    "events.updatedAt": "Обновлено",
     "reports.title": "Отчёты",
     "reports.subtitle": "Подготовка аналитики и отчётности",
     "settings.title": "Настройки",
@@ -325,6 +331,10 @@ const translations = {
     "events.filterCritical": "Kritik",
     "events.filterWarning": "Ogohlantirish",
     "events.filterInfo": "Info",
+    "events.liveOn": "Live: yoq",
+    "events.liveOff": "Live: o‘ch",
+    "events.liveStatus": "Hozirgina yangilandi",
+    "events.updatedAt": "Yangilandi",
     "reports.title": "Hisobotlar",
     "reports.subtitle": "Tahlil va hisobot tayyorlash",
     "settings.title": "Sozlamalar",
@@ -462,6 +472,7 @@ let deviceSearchQuery = "";
 let activeTopologyKey = "rju-1";
 let activeEventFilter = "all";
 let currentRole = "admin";
+let isLiveEventsEnabled = true;
 let isTopologyEditMode = false;
 let isTopologyLinkMode = false;
 let selectedLinkNodeId = null;
@@ -536,6 +547,43 @@ const setEventFilter = (severity) => {
     button.classList.toggle("active", button.dataset.eventFilter === severity);
   });
   filterEventsTable();
+};
+
+
+const setEventsLiveStatus = (text) => {
+  if (!eventsLiveStatus) return;
+  eventsLiveStatus.textContent = text;
+};
+
+const appendLiveEvent = (severity, title) => {
+  if (!eventsTable) return;
+  const row = document.createElement("div");
+  row.className = "event-row";
+  row.dataset.severity = severity;
+  const indicatorClass = severity === "critical" ? "danger" : severity === "warning" ? "warning" : "success";
+  row.innerHTML = `
+    <div class="event-indicator ${indicatorClass}"></div>
+    <div>
+      <p class="event-title">${title}</p>
+      <p class="event-meta">${severity === "critical" ? translate("events.filterCritical") : severity === "warning" ? translate("events.filterWarning") : translate("events.filterInfo")} • ${formatTime(new Date())}</p>
+    </div>
+    <div class="event-actions">
+      <button class="ghost small" type="button">${translate("actions.details")}</button>
+    </div>
+  `;
+  eventsTable.prepend(row);
+  const rows = eventsTable.querySelectorAll('.event-row');
+  if (rows.length > 20) rows[rows.length - 1].remove();
+  filterEventsTable();
+  setEventsLiveStatus(`${translate("events.updatedAt")}: ${formatTime(new Date())}`);
+};
+
+const setLiveEventsEnabled = (enabled) => {
+  isLiveEventsEnabled = enabled;
+  if (eventsLiveToggle) {
+    eventsLiveToggle.classList.toggle('active', enabled);
+    eventsLiveToggle.textContent = enabled ? translate('events.liveOn') : translate('events.liveOff');
+  }
 };
 
 const setActiveCategory = (category) => {
@@ -747,6 +795,10 @@ const applyTranslations = () => {
   renderDeviceTable();
   renderTopology();
   applyRolePermissions();
+  setLiveEventsEnabled(isLiveEventsEnabled);
+  if (eventsLiveStatus && !eventsLiveStatus.textContent.trim()) {
+    setEventsLiveStatus(translate("events.liveStatus"));
+  }
 };
 
 const rolePermissions = {
@@ -815,6 +867,10 @@ const setRole = (role) => {
   localStorage.setItem("role", nextRole);
   if (roleSelect) roleSelect.value = nextRole;
   applyRolePermissions();
+  setLiveEventsEnabled(isLiveEventsEnabled);
+  if (eventsLiveStatus && !eventsLiveStatus.textContent.trim()) {
+    setEventsLiveStatus(translate("events.liveStatus"));
+  }
 };
 
 const setTheme = (theme) => {
@@ -1178,6 +1234,15 @@ if (roleSelect) {
   });
 }
 
+if (eventsLiveToggle) {
+  eventsLiveToggle.addEventListener("click", () => {
+    setLiveEventsEnabled(!isLiveEventsEnabled);
+    if (!isLiveEventsEnabled) {
+      setEventsLiveStatus(translate("events.liveStatus"));
+    }
+  });
+}
+
 const setActiveSection = (sectionId) => {
   sections.forEach((section) => {
     section.classList.toggle("active", section.dataset.section === sectionId);
@@ -1221,6 +1286,8 @@ setTheme(storedTheme || "dark");
 setLanguage(storedLanguage || "ru");
 setRole(storedRole || "admin");
 setEventFilter("all");
+setLiveEventsEnabled(true);
+setEventsLiveStatus(translate("events.liveStatus"));
 
 updateTime();
 setInterval(updateTime, 1000 * 30);

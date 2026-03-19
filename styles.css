@@ -1304,6 +1304,13 @@ button.small {
   color: #e2e8f0;
 }
 
+.events-live-status {
+  font-size: 12px;
+  color: var(--muted);
+  padding: 0 4px;
+  white-space: nowrap;
+}
+
 .event-table {
   display: grid;
   gap: 12px;

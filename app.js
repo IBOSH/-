@@ -9,6 +9,10 @@ const eventsFilterButtons = document.querySelectorAll("[data-event-filter]");
 const eventsTable = document.getElementById("events-table");
 const eventsLiveToggle = document.getElementById("events-live-toggle");
 const eventsLiveStatus = document.getElementById("events-live-status");
+const reportsPeriodSelect = document.getElementById("reports-period-select");
+const reportsSlaPath = document.getElementById("reports-sla-path");
+const reportsSlaLabel = document.getElementById("reports-sla-label");
+const reportsSlaSubtitle = document.getElementById("reports-sla-subtitle");
 const categoryTabs = document.querySelectorAll(".tab");
 const navLinks = document.querySelectorAll(".nav-link");
 const sections = document.querySelectorAll(".page-section");
@@ -204,6 +208,14 @@ const translations = {
     "events.updatedAt": "Обновлено",
     "reports.title": "Отчёты",
     "reports.subtitle": "Подготовка аналитики и отчётности",
+    "reports.availabilityTitle": "Доступность",
+    "reports.period24h": "24ч",
+    "reports.period7d": "7д",
+    "reports.period30d": "30д",
+    "reports.slaSubtitle24h": "Отчёт по SLA за сутки",
+    "reports.slaSubtitle7d": "Отчёт по SLA за неделю",
+    "reports.slaSubtitle30d": "Отчёт по SLA за месяц",
+    "reports.slaAvg": "Средний SLA",
     "settings.title": "Настройки",
     "settings.subtitle": "Параметры мониторинга и интеграций",
     "labels.device": "Устройство",
@@ -337,6 +349,14 @@ const translations = {
     "events.updatedAt": "Yangilandi",
     "reports.title": "Hisobotlar",
     "reports.subtitle": "Tahlil va hisobot tayyorlash",
+    "reports.availabilityTitle": "Mavjudlik",
+    "reports.period24h": "24soat",
+    "reports.period7d": "7kun",
+    "reports.period30d": "30kun",
+    "reports.slaSubtitle24h": "Sutkalik SLA hisoboti",
+    "reports.slaSubtitle7d": "Haftalik SLA hisoboti",
+    "reports.slaSubtitle30d": "Oylik SLA hisoboti",
+    "reports.slaAvg": "O‘rtacha SLA",
     "settings.title": "Sozlamalar",
     "settings.subtitle": "Monitoring va integratsiya parametrlari",
     "labels.device": "Qurilma",
@@ -473,11 +493,30 @@ let activeTopologyKey = "rju-1";
 let activeEventFilter = "all";
 let currentRole = "admin";
 let isLiveEventsEnabled = true;
+let activeReportsPeriod = "7d";
 let isTopologyEditMode = false;
 let isTopologyLinkMode = false;
 let selectedLinkNodeId = null;
 let selectedLinkType = "core";
 const topologyView = { scale: 1, offsetX: 0, offsetY: 0 };
+
+const slaTrendData = {
+  "24h": {
+    subtitleKey: "reports.slaSubtitle24h",
+    avg: "99.91%",
+    points: [99.82, 99.88, 99.9, 99.84, 99.89, 99.93, 99.9, 99.94, 99.92, 99.95, 99.91],
+  },
+  "7d": {
+    subtitleKey: "reports.slaSubtitle7d",
+    avg: "99.96%",
+    points: [99.9, 99.92, 99.93, 99.91, 99.95, 99.96, 99.94, 99.97, 99.96, 99.98, 99.96],
+  },
+  "30d": {
+    subtitleKey: "reports.slaSubtitle30d",
+    avg: "99.89%",
+    points: [99.78, 99.8, 99.82, 99.81, 99.83, 99.84, 99.85, 99.86, 99.87, 99.88, 99.89],
+  },
+};
 
 const buildDeviceTable = (rows, target) => {
   if (!target) return;
@@ -547,6 +586,36 @@ const setEventFilter = (severity) => {
     button.classList.toggle("active", button.dataset.eventFilter === severity);
   });
   filterEventsTable();
+};
+
+const buildSparklinePath = (points) => {
+  if (!points.length) return "";
+  const min = Math.min(...points);
+  const max = Math.max(...points);
+  const range = max - min || 1;
+  return points
+    .map((value, index) => {
+      const x = (index / (points.length - 1)) * 200;
+      const y = 52 - ((value - min) / range) * 34;
+      return `${index === 0 ? "M" : "L"}${x.toFixed(2)} ${y.toFixed(2)}`;
+    })
+    .join(" ");
+};
+
+const renderReportsTrend = () => {
+  const trend = slaTrendData[activeReportsPeriod] || slaTrendData["7d"];
+  if (reportsSlaPath) {
+    reportsSlaPath.setAttribute("d", buildSparklinePath(trend.points));
+  }
+  if (reportsSlaLabel) {
+    reportsSlaLabel.textContent = `${translate("reports.slaAvg")}: ${trend.avg}`;
+  }
+  if (reportsSlaSubtitle) {
+    reportsSlaSubtitle.textContent = translate(trend.subtitleKey);
+  }
+  if (reportsPeriodSelect) {
+    reportsPeriodSelect.value = activeReportsPeriod;
+  }
 };
 
 
@@ -794,6 +863,7 @@ const applyTranslations = () => {
   updateTopologyToggleLabels();
   renderDeviceTable();
   renderTopology();
+  renderReportsTrend();
   applyRolePermissions();
   setLiveEventsEnabled(isLiveEventsEnabled);
   if (eventsLiveStatus && !eventsLiveStatus.textContent.trim()) {
@@ -1234,6 +1304,13 @@ if (roleSelect) {
   });
 }
 
+if (reportsPeriodSelect) {
+  reportsPeriodSelect.addEventListener("change", (event) => {
+    activeReportsPeriod = event.target.value;
+    renderReportsTrend();
+  });
+}
+
 if (eventsLiveToggle) {
   eventsLiveToggle.addEventListener("click", () => {
     setLiveEventsEnabled(!isLiveEventsEnabled);
@@ -1288,6 +1365,7 @@ setRole(storedRole || "admin");
 setEventFilter("all");
 setLiveEventsEnabled(true);
 setEventsLiveStatus(translate("events.liveStatus"));
+renderReportsTrend();
 
 updateTime();
 setInterval(updateTime, 1000 * 30);

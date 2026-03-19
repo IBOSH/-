@@ -448,6 +448,14 @@ button.small {
   gap: 12px;
 }
 
+.card-header.compact {
+  margin-bottom: 8px;
+}
+
+.card-header.compact select {
+  min-width: 84px;
+}
+
 .card-title {
   font-size: 16px;
   font-weight: 600;

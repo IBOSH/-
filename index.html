@@ -736,13 +736,22 @@
         </header>
         <div class="grid">
           <article class="card span-6">
-            <p class="card-title">Доступность</p>
-            <p class="card-subtitle">Отчёт по SLA за неделю</p>
+            <div class="card-header compact">
+              <div>
+                <p class="card-title" data-i18n="reports.availabilityTitle">Доступность</p>
+                <p class="card-subtitle" id="reports-sla-subtitle" data-i18n="reports.slaSubtitle7d">Отчёт по SLA за неделю</p>
+              </div>
+              <select id="reports-period-select" class="ghost small" aria-label="Период отчёта SLA">
+                <option value="24h" data-i18n="reports.period24h">24ч</option>
+                <option value="7d" selected data-i18n="reports.period7d">7д</option>
+                <option value="30d" data-i18n="reports.period30d">30д</option>
+              </select>
+            </div>
             <div class="sparkline">
               <svg viewBox="0 0 200 60" preserveAspectRatio="none">
-                <path d="M0 40 L20 36 L40 38 L60 28 L80 32 L100 26 L120 30 L140 20 L160 24 L180 18 L200 22" />
+                <path id="reports-sla-path" d="M0 40 L20 36 L40 38 L60 28 L80 32 L100 26 L120 30 L140 20 L160 24 L180 18 L200 22" />
               </svg>
-              <p class="sparkline-label">Средний SLA: 99.96%</p>
+              <p class="sparkline-label" id="reports-sla-label" data-i18n="reports.slaAvg">Средний SLA: 99.96%</p>
             </div>
           </article>
           <article class="card span-6">

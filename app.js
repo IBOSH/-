@@ -212,6 +212,7 @@ const translations = {
     "events.slaRiskLabel": "Риск SLA",
     "events.queueTitle": "Активные инциденты",
     "events.queueSubtitle": "Очередь реагирования по зонам и сервисам",
+    "events.openSuffix": "открыто",
     "events.filterAll": "Все",
     "events.filterCritical": "Критично",
     "events.filterWarning": "Предупреждение",
@@ -365,6 +366,7 @@ const translations = {
     "events.slaRiskLabel": "SLA xatari",
     "events.queueTitle": "Faol hodisalar",
     "events.queueSubtitle": "Zonalar va servislar bo‘yicha javob navbati",
+    "events.openSuffix": "ochiq",
     "events.filterAll": "Barchasi",
     "events.filterCritical": "Kritik",
     "events.filterWarning": "Ogohlantirish",
@@ -633,7 +635,7 @@ const renderIncidentSummary = () => {
   if (!incidentOpenCount || !incidentQueue) return;
   const rows = incidentQueue.querySelectorAll(".incident-queue-row");
   const openCount = Array.from(rows).filter((row) => !row.classList.contains("success")).length;
-  incidentOpenCount.textContent = `${openCount} open`;
+  incidentOpenCount.textContent = `${openCount} ${translate("events.openSuffix")}`;
   incidentOpenCount.classList.toggle("danger", openCount > 0);
 };
 

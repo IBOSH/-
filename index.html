@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Центр контроля | Мониторинг сети</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="logo">
+        <span class="logo-mark"></span>
+        <div>
+          <p class="logo-title" data-i18n="brand.title">Центр контроля</p>
+          <p class="logo-subtitle" data-i18n="brand.subtitle">Network Command</p>
+        </div>
+      </div>
+      <div class="sidebar-controls">
+        <label class="control-label" for="language-select" data-i18n="sidebar.languageLabel">Язык</label>
+        <select id="language-select" class="ghost small" aria-label="Выбор языка">
+          <option value="ru">Русский</option>
+          <option value="uz">Oʻzbekcha</option>
+        </select>
+        <label class="control-label" for="theme-select" data-i18n="sidebar.themeLabel">Тема</label>
+        <select id="theme-select" class="ghost small" aria-label="Выбор темы">
+          <option value="dark">Dark</option>
+          <option value="light">Light</option>
+          <option value="ops">Night Ops</option>
+          <option value="zabbix">Blue Zabbix</option>
+          <option value="graphite">Graphite</option>
+        </select>
+        <label class="control-label" for="role-select" data-i18n="sidebar.roleLabel">Роль</label>
+        <select id="role-select" class="ghost small" aria-label="Выбор роли">
+          <option value="viewer" data-i18n="roles.viewer">Viewer</option>
+          <option value="operator" data-i18n="roles.operator">Operator</option>
+          <option value="admin" data-i18n="roles.admin">Admin</option>
+        </select>
+        <p class="role-hint" id="role-hint" data-i18n="roles.hintViewer">Только просмотр</p>
+      </div>
+      <nav class="nav">
+        <a class="nav-link active" href="#dashboard" data-section="dashboard" data-i18n="nav.dashboard">Дашборд</a>
+        <a class="nav-link" href="#network" data-section="network" data-i18n="nav.network">Сеть</a>
+        <a class="nav-link" href="#topology" data-section="topology" data-i18n="nav.topology">Топология</a>
+        <a class="nav-link" href="#nodes" data-section="nodes" data-i18n="nav.nodes">Узлы</a>
+        <a class="nav-link" href="#events" data-section="events" data-i18n="nav.events">События</a>
+        <a class="nav-link" href="#reports" data-section="reports" data-i18n="nav.reports">Отчёты</a>
+        <a class="nav-link" href="#settings" data-section="settings" data-i18n="nav.settings">Настройки</a>
+      </nav>
+      <div class="sidebar-footer">
+        <p class="footer-label" data-i18n="sidebar.statusLabel">Состояние агента</p>
+        <div class="status">
+          <span class="status-dot"></span>
+          <span data-i18n="sidebar.statusActive">Активен</span>
+        </div>
+        <p class="footer-time" id="local-time">--:--</p>
+      </div>
+    </aside>
+
+    <main class="content">
+      <section class="page-section active" id="dashboard" data-section="dashboard">
+        <header class="topbar">
+          <div>
+          <p class="page-title" data-i18n="dashboard.title">Центр контроля сети</p>
+          <p class="page-subtitle" data-i18n="dashboard.subtitle">250 коммутаторов • 600 IP-телефонов • живые пинги</p>
+          </div>
+          <div class="topbar-actions">
+            <button class="ghost" data-i18n="actions.export">Экспорт</button>
+            <button class="primary" data-i18n="actions.createReport">Создать отчёт</button>
+          </div>
+        </header>
+
+        <section class="kpi-grid">
+          <article class="kpi-card">
+            <p class="kpi-title">Инфраструктура</p>
+            <p class="kpi-value">850 устройств</p>
+            <p class="kpi-meta success">Коммутаторы + телефония</p>
+          </article>
+        <article class="kpi-card">
+          <p class="kpi-title">Доступность сети</p>
+          <p class="kpi-value">99.98%</p>
+          <p class="kpi-meta success">+0.03% к вчера</p>
+        </article>
+        <article class="kpi-card">
+          <p class="kpi-title">Средняя задержка</p>
+          <p class="kpi-value">16 мс</p>
+          <p class="kpi-meta warning">+2 мс к вчера</p>
+        </article>
+        <article class="kpi-card">
+          <p class="kpi-title">Потеря пакетов</p>
+          <p class="kpi-value">0.12%</p>
+          <p class="kpi-meta success">-0.05% к вчера</p>
+        </article>
+        <article class="kpi-card">
+          <p class="kpi-title">Инциденты</p>
+          <p class="kpi-value">5</p>
+          <p class="kpi-meta danger">2 критичных</p>
+        </article>
+        <article class="kpi-card">
+          <p class="kpi-title">Коммутаторы</p>
+          <p class="kpi-value">250</p>
+          <p class="kpi-meta success">238 онлайн</p>
+        </article>
+        <article class="kpi-card">
+          <p class="kpi-title">IP телефоны</p>
+          <p class="kpi-value">600</p>
+          <p class="kpi-meta warning">12 офлайн</p>
+        </article>
+        </section>
+
+        <section class="category-panel">
+          <div>
+            <p class="card-title" data-i18n="categories.title">Категории устройств</p>
+            <p class="card-subtitle" data-i18n="categories.subtitle">Переключайтесь между группами и добавляйте новые устройства</p>
+          </div>
+          <div class="category-tabs" role="tablist" aria-label="Категории устройств">
+            <button class="tab active" type="button" data-category="all" data-i18n="categories.all">Все</button>
+            <button class="tab" type="button" data-category="switch" data-i18n="categories.switch">Коммутаторы</button>
+            <button class="tab" type="button" data-category="phone" data-i18n="categories.phone">IP-телефоны</button>
+            <button class="tab" type="button" data-category="router" data-i18n="categories.router">Маршрутизаторы</button>
+            <button class="tab" type="button" data-category="server" data-i18n="categories.server">Серверы</button>
+          </div>
+        </section>
+
+        <section class="grid">
+        <article class="card span-7">
+          <div class="card-header">
+            <div>
+              <p class="card-title" data-i18n="traffic.title">Трафик магистрали</p>
+              <p class="card-subtitle" data-i18n="traffic.subtitle">Gbps, последние 12 часов</p>
+            </div>
+            <span class="pill" data-i18n="traffic.realtime">Real-time</span>
+          </div>
+          <div class="chart">
+            <svg viewBox="0 0 640 220" preserveAspectRatio="none">
+              <defs>
+                <linearGradient id="traffic" x1="0" x2="0" y1="0" y2="1">
+                  <stop offset="0%" stop-color="#60a5fa" stop-opacity="0.5" />
+                  <stop offset="100%" stop-color="#60a5fa" stop-opacity="0" />
+                </linearGradient>
+                <linearGradient id="traffic-2" x1="0" x2="0" y1="0" y2="1">
+                  <stop offset="0%" stop-color="#2dd4bf" stop-opacity="0.45" />
+                  <stop offset="100%" stop-color="#2dd4bf" stop-opacity="0" />
+                </linearGradient>
+              </defs>
+              <path
+                d="M0 200 C 50 170, 110 150, 170 160 C 230 170, 280 130, 340 120 C 400 110, 470 90, 540 110 C 600 130, 640 110, 640 110 L 640 220 L 0 220 Z"
+                fill="url(#traffic-2)"
+              />
+              <path
+                d="M0 180 C 60 150, 120 120, 180 130 C 240 140, 300 80, 360 90 C 420 100, 480 60, 540 70 C 600 80, 640 40, 640 40 L 640 220 L 0 220 Z"
+                fill="url(#traffic)"
+              />
+              <path
+                d="M0 180 C 60 150, 120 120, 180 130 C 240 140, 300 80, 360 90 C 420 100, 480 60, 540 70 C 600 80, 640 40, 640 40"
+                fill="none"
+                stroke="#60a5fa"
+                stroke-width="3"
+              />
+            </svg>
+          </div>
+          <div class="legend">
+            <div>
+              <span class="dot blue"></span>
+              Входящий: 6.4 Gbps
+            </div>
+            <div>
+              <span class="dot teal"></span>
+              Исходящий: 5.9 Gbps
+            </div>
+          </div>
+        </article>
+
+        <article class="card span-5">
+          <div class="card-header">
+            <div>
+              <p class="card-title" data-i18n="incidents.title">Инциденты по зонам</p>
+              <p class="card-subtitle" data-i18n="incidents.subtitle">Текущие состояния</p>
+            </div>
+          </div>
+          <div class="zone-list">
+            <div class="zone">
+              <div>
+                <p class="zone-title">РЖУ-1</p>
+                <p class="zone-meta">134 узла • 1 критичный</p>
+              </div>
+              <span class="badge danger">Critical</span>
+            </div>
+            <div class="zone">
+              <div>
+                <p class="zone-title">РЖУ-2</p>
+                <p class="zone-meta">98 узлов • 0 критичных</p>
+              </div>
+              <span class="badge success">Stable</span>
+            </div>
+            <div class="zone">
+              <div>
+                <p class="zone-title">РЖУ-3</p>
+                <p class="zone-meta">62 узла • 1 предупреждение</p>
+              </div>
+              <span class="badge warning">Degraded</span>
+            </div>
+            <div class="zone">
+              <div>
+                <p class="zone-title">РЖУ-4</p>
+                <p class="zone-meta">47 узлов • 1 критичный</p>
+              </div>
+              <span class="badge danger">Critical</span>
+            </div>
+          </div>
+          <div class="mini-metrics">
+            <div>
+              <p class="mini-label">Коммутаторы онлайн</p>
+              <p class="mini-value">247 / 250</p>
+            </div>
+            <div>
+              <p class="mini-label">IP-телефоны</p>
+              <p class="mini-value">597 / 600</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="card span-8">
+          <div class="card-header">
+            <div>
+              <p class="card-title" data-i18n="topologyCard.title">Топология нагрузки</p>
+              <p class="card-subtitle" data-i18n="topologyCard.subtitle">Графическая карта коммутаторов</p>
+            </div>
+            <div class="topology-tabs" role="tablist" aria-label="Топологии РЖУ">
+              <button class="topology-tab active" type="button" data-topology="rju-1">РЖУ-1</button>
+              <button class="topology-tab" type="button" data-topology="rju-2">РЖУ-2</button>
+              <button class="topology-tab" type="button" data-topology="rju-3">РЖУ-3</button>
+              <button class="topology-tab" type="button" data-topology="rju-4">РЖУ-4</button>
+              <button class="topology-tab" type="button" data-topology="rju-5">РЖУ-5</button>
+              <button class="topology-tab" type="button" data-topology="rju-6">РЖУ-6</button>
+            </div>
+          </div>
+          <div class="topology-graph" id="dashboard-topology"></div>
+          <div class="latency-grid">
+            <div>
+              <p class="latency-title">CORE ↔ SW-101</p>
+              <p class="latency-value">11 мс</p>
+            </div>
+            <div>
+              <p class="latency-title">CORE ↔ SW-205</p>
+              <p class="latency-value">15 мс</p>
+            </div>
+            <div>
+              <p class="latency-title">CORE ↔ SW-312</p>
+              <p class="latency-value">13 мс</p>
+            </div>
+            <div>
+              <p class="latency-title">SW-205 ↔ SW-509</p>
+              <p class="latency-value danger-text">timeout</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="card span-4">
+          <div class="card-header">
+            <div>
+              <p class="card-title" data-i18n="ping.title">Пинг критичных узлов</p>
+              <p class="card-subtitle" data-i18n="ping.subtitle">Живые пинги</p>
+            </div>
+          </div>
+          <div class="ping-list" id="ping-list">
+            <div class="ping-item">
+              <span>SW-101</span>
+              <span class="pill success">12 мс</span>
+            </div>
+            <div class="ping-item">
+              <span>SW-205</span>
+              <span class="pill warning">28 мс</span>
+            </div>
+            <div class="ping-item">
+              <span>SW-312</span>
+              <span class="pill success">15 мс</span>
+            </div>
+            <div class="ping-item">
+              <span>SW-509</span>
+              <span class="pill danger">timeout</span>
+            </div>
+            <div class="ping-item">
+              <span>IP-PHONE-128</span>
+              <span class="pill success">19 мс</span>
+            </div>
+          </div>
+          <div class="sparkline">
+            <svg viewBox="0 0 200 60" preserveAspectRatio="none">
+              <path d="M0 44 L20 34 L40 38 L60 26 L80 30 L100 22 L120 28 L140 16 L160 20 L180 14 L200 18" />
+            </svg>
+            <p class="sparkline-label">Средний пинг узлов: 19 мс</p>
+          </div>
+        </article>
+
+          <article class="card span-12">
+          <div class="card-header">
+            <div>
+              <p class="card-title">Перечень устройств</p>
+              <p class="card-subtitle">Добавляйте новые узлы и фильтруйте по категории</p>
+            </div>
+            <span class="pill">Inventory</span>
+          </div>
+          <form class="device-form" id="device-form">
+            <input type="text" name="name" placeholder="Имя устройства" required />
+            <input type="text" name="ip" placeholder="IP-адрес" required />
+            <select name="category" required>
+              <option value="">Категория</option>
+              <option value="switch">Коммутатор</option>
+              <option value="phone">IP-телефон</option>
+              <option value="router">Маршрутизатор</option>
+              <option value="server">Сервер</option>
+            </select>
+            <select name="status" required>
+              <option value="">Статус</option>
+              <option value="online">Онлайн</option>
+              <option value="warning">Предупреждение</option>
+              <option value="offline">Оффлайн</option>
+            </select>
+            <button class="primary" type="submit">Добавить устройство</button>
+          </form>
+          <div class="device-filters">
+            <input
+              type="search"
+              id="device-search"
+              class="device-search"
+              placeholder="Поиск по имени или IP"
+              data-i18n-placeholder="inventory.searchPlaceholder"
+            />
+            <div class="status-filters" role="group" aria-label="Фильтр по статусу">
+              <button class="ghost small status-filter active" type="button" data-status-filter="all" data-i18n="inventory.filterAll">Все</button>
+              <button class="ghost small status-filter" type="button" data-status-filter="online" data-i18n="inventory.filterOnline">Онлайн</button>
+              <button class="ghost small status-filter" type="button" data-status-filter="warning" data-i18n="inventory.filterWarning">Предупреждение</button>
+              <button class="ghost small status-filter" type="button" data-status-filter="offline" data-i18n="inventory.filterOffline">Оффлайн</button>
+            </div>
+          </div>
+          <div class="device-table" id="device-table" aria-live="polite"></div>
+        </article>
+
+          <article class="card span-6">
+          <div class="card-header">
+            <div>
+              <p class="card-title">Качество VoIP</p>
+              <p class="card-subtitle">MOS и потери пакетов</p>
+            </div>
+            <span class="pill">Live</span>
+          </div>
+          <div class="voice-chart">
+            <div class="ring">
+              <svg viewBox="0 0 120 120">
+                <circle cx="60" cy="60" r="46" class="ring-bg" />
+                <circle cx="60" cy="60" r="46" class="ring-progress" />
+              </svg>
+              <div class="ring-label">
+                <p>MOS</p>
+                <strong>4.2</strong>
+              </div>
+            </div>
+            <div class="voice-bars">
+              <div class="bar">
+                <span>Потери</span>
+                <div class="bar-track"><div class="bar-fill warning" style="width: 32%;"></div></div>
+                <span>0.9%</span>
+              </div>
+              <div class="bar">
+                <span>Джиттер</span>
+                <div class="bar-track"><div class="bar-fill success" style="width: 18%;"></div></div>
+                <span>3.1 мс</span>
+              </div>
+              <div class="bar">
+                <span>Задержка</span>
+                <div class="bar-track"><div class="bar-fill accent" style="width: 44%;"></div></div>
+                <span>21 мс</span>
+              </div>
+            </div>
+          </div>
+        </article>
+
+          <article class="card span-6">
+          <div class="card-header">
+            <div>
+              <p class="card-title">Каналы связи</p>
+              <p class="card-subtitle">Загрузка и резервирование</p>
+            </div>
+            <span class="pill">Up</span>
+          </div>
+          <div class="link-grid">
+            <div class="link-card">
+              <p>Core ↔ РЖУ-1</p>
+              <div class="link-meter"><span style="width: 68%"></span></div>
+              <p class="link-meta">8.1 Gbps • 68%</p>
+            </div>
+            <div class="link-card">
+              <p>РЖУ-1 ↔ РЖУ-2</p>
+              <div class="link-meter"><span style="width: 52%"></span></div>
+              <p class="link-meta">5.2 Gbps • 52%</p>
+            </div>
+            <div class="link-card">
+              <p>Voice MPLS</p>
+              <div class="link-meter warning"><span style="width: 76%"></span></div>
+              <p class="link-meta">3.9 Gbps • 76%</p>
+            </div>
+          </div>
+        </article>
+
+          <article class="card span-12">
+          <div class="card-header">
+            <div>
+              <p class="card-title">Карта распределения устройств</p>
+              <p class="card-subtitle">Коммутаторы, телефония и каналы доступа</p>
+            </div>
+            <span class="pill">Live map</span>
+          </div>
+          <div class="network-map">
+            <div class="map-overlay">
+              <p>Сегменты: Core, Access, Voice</p>
+              <p>Всего каналов: 14 • Загрузка 68%</p>
+            </div>
+            <svg viewBox="0 0 720 260" preserveAspectRatio="none">
+              <defs>
+                <radialGradient id="mapGlow" cx="50%" cy="30%" r="60%">
+                  <stop offset="0%" stop-color="#60a5fa" stop-opacity="0.35" />
+                  <stop offset="100%" stop-color="#111a2e" stop-opacity="0" />
+                </radialGradient>
+              </defs>
+              <rect width="720" height="260" fill="url(#mapGlow)" />
+              <path class="map-line" d="M40 60 L200 40 L360 70 L520 50 L680 80" />
+              <path class="map-line success" d="M120 200 L260 170 L420 190 L600 150" />
+              <path class="map-line warning" d="M80 120 L240 110 L400 140 L560 120 L680 140" />
+              <circle cx="200" cy="40" r="18" class="map-node core" />
+              <circle cx="360" cy="70" r="16" class="map-node core" />
+              <circle cx="520" cy="50" r="16" class="map-node core" />
+              <circle cx="120" cy="200" r="14" class="map-node access" />
+              <circle cx="260" cy="170" r="14" class="map-node access" />
+              <circle cx="420" cy="190" r="14" class="map-node access" />
+              <circle cx="600" cy="150" r="14" class="map-node access" />
+              <rect x="640" y="30" width="50" height="24" rx="8" class="map-phone" />
+              <rect x="40" y="160" width="50" height="24" rx="8" class="map-phone" />
+              <rect x="90" y="90" width="50" height="24" rx="8" class="map-phone" />
+            </svg>
+            <div class="map-legend">
+              <div><span class="dot blue"></span> Core</div>
+              <div><span class="dot teal"></span> Access</div>
+              <div><span class="dot orange"></span> Voice</div>
+            </div>
+          </div>
+        </article>
+
+          <article class="card span-12">
+          <div class="card-header">
+            <div>
+              <p class="card-title">Последние события</p>
+              <p class="card-subtitle">Уведомления и рекомендации</p>
+            </div>
+            <button class="ghost">Фильтр</button>
+          </div>
+          <div class="event-table">
+            <div class="event-row">
+              <div class="event-indicator danger"></div>
+              <div>
+                <p class="event-title">Timeout на SW-509</p>
+                <p class="event-meta">Критично • 2 минуты назад</p>
+              </div>
+              <div class="event-actions">
+                <button class="ghost small" data-i18n="actions.diagnostics">Диагностика</button>
+                <button class="primary small" data-i18n="actions.escalate">Эскалация</button>
+              </div>
+            </div>
+            <div class="event-row">
+              <div class="event-indicator warning"></div>
+              <div>
+                <p class="event-title">Потери пакетов в зоне РЖУ-1</p>
+                <p class="event-meta">Предупреждение • 14 минут назад</p>
+              </div>
+              <div class="event-actions">
+                <button class="ghost small" data-i18n="actions.plan">План работ</button>
+                <button class="primary small" data-i18n="actions.createTicket">Создать тикет</button>
+              </div>
+            </div>
+            <div class="event-row">
+              <div class="event-indicator success"></div>
+              <div>
+                <p class="event-title">Восстановлена линия SW-312 ↔ CORE</p>
+                <p class="event-meta">Инфо • 35 минут назад</p>
+              </div>
+              <div class="event-actions">
+                <button class="ghost small" data-i18n="actions.details">Подробнее</button>
+              </div>
+            </div>
+          </div>
+        </article>
+        </section>
+      </section>
+
+      <section class="page-section" id="network" data-section="network">
+        <header class="topbar">
+          <div>
+            <p class="page-title" data-i18n="network.title">Сеть</p>
+            <p class="page-subtitle" data-i18n="network.subtitle">Обзор каналов связи и сегментов</p>
+          </div>
+          <div class="topbar-actions">
+            <button class="ghost" data-i18n="actions.export">Экспорт</button>
+            <button class="primary" data-i18n="actions.optimize">Оптимизация</button>
+          </div>
+        </header>
+        <div class="grid">
+          <article class="card span-6">
+            <p class="card-title" data-i18n="network.coreLinks">Каналы ядра</p>
+            <p class="card-subtitle" data-i18n="network.coreLinksSubtitle">Средняя загрузка 68%</p>
+            <div class="link-grid">
+              <div class="link-card">
+                <p>Core ↔ РЖУ-1</p>
+                <div class="link-meter"><span style="width: 68%"></span></div>
+                <p class="link-meta">8.1 Gbps • 68%</p>
+              </div>
+              <div class="link-card">
+                <p>Core ↔ РЖУ-2</p>
+                <div class="link-meter"><span style="width: 48%"></span></div>
+                <p class="link-meta">6.7 Gbps • 48%</p>
+              </div>
+            </div>
+          </article>
+          <article class="card span-6">
+            <p class="card-title" data-i18n="network.segmentMap">Карта сегментов</p>
+            <p class="card-subtitle" data-i18n="network.segmentMapSubtitle">Core • Access • Voice</p>
+            <div class="network-map">
+              <div class="map-overlay">
+                <p data-i18n="network.segmentOverlay">Сегменты: Core, Access, Voice</p>
+                <p data-i18n="network.segmentActive">Активно: 14</p>
+              </div>
+              <svg viewBox="0 0 720 200" preserveAspectRatio="none">
+                <rect width="720" height="200" fill="rgba(15, 23, 42, 0.4)" />
+                <path class="map-line" d="M40 40 L200 30 L360 60 L520 50 L680 70" />
+                <path class="map-line success" d="M120 160 L260 140 L420 150 L600 130" />
+                <path class="map-line warning" d="M80 90 L240 80 L400 100 L560 90 L680 110" />
+              </svg>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="page-section" id="nodes" data-section="nodes">
+        <header class="topbar">
+          <div>
+            <p class="page-title" data-i18n="nodes.title">Узлы</p>
+            <p class="page-subtitle" data-i18n="nodes.subtitle">Список устройств и групп</p>
+          </div>
+          <div class="topbar-actions">
+            <button class="ghost" data-i18n="actions.import">Импорт</button>
+            <button class="primary" data-i18n="actions.addNode">Добавить узел</button>
+          </div>
+        </header>
+        <div class="grid">
+          <article class="card span-12">
+            <p class="card-title" data-i18n="inventory.title">Инвентарь устройств</p>
+            <p class="card-subtitle" data-i18n="inventory.subtitle">Доступно через таблицу на дашборде</p>
+            <div class="device-table" id="device-table-nodes"></div>
+          </article>
+        </div>
+      </section>
+
+      <section class="page-section" id="topology" data-section="topology">
+        <header class="topbar">
+          <div>
+            <p class="page-title" data-i18n="topology.title">Топология</p>
+            <p class="page-subtitle" data-i18n="topology.subtitle">Соберите схему сети и наблюдайте за связями</p>
+          </div>
+          <div class="topbar-actions">
+            <select class="ghost" id="topology-area-select" aria-label="Выбор зоны РЖУ">
+              <option value="rju-1">РЖУ-1</option>
+              <option value="rju-2">РЖУ-2</option>
+              <option value="rju-3">РЖУ-3</option>
+              <option value="rju-4">РЖУ-4</option>
+              <option value="rju-5">РЖУ-5</option>
+              <option value="rju-6">РЖУ-6</option>
+            </select>
+            <button class="ghost" type="button" id="topology-import-btn" data-i18n="actions.import">Импорт</button>
+            <button class="ghost" type="button" id="topology-export-btn" data-i18n="actions.export">Экспорт</button>
+            <button class="ghost" type="button" id="topology-edit-toggle" data-i18n="topology.edit">Редактировать</button>
+            <button class="ghost" type="button" id="topology-link-toggle" data-i18n="topology.linksOff">Линии: выкл</button>
+            <button class="ghost" type="button" id="topology-clear-links" data-i18n="topology.clearLinks">Очистить линии</button>
+            <button class="ghost" type="button" id="topology-view-reset" data-i18n="topology.viewReset">Сброс вида</button>
+            <button class="primary" type="button" id="topology-save-btn" data-i18n="topology.save">Сохранить схему</button>
+          </div>
+        </header>
+        <div class="topology-layout">
+          <aside class="topology-panel">
+            <div>
+              <p class="card-title" data-i18n="topology.builderTitle">Конструктор топологии</p>
+              <p class="card-subtitle" data-i18n="topology.builderSubtitle">Добавляйте узлы и связи — данные сразу появятся на дашборде</p>
+            </div>
+            <form class="topology-form" id="topology-node-form">
+              <label>
+                <span data-i18n="topology.nodeName">Имя узла</span>
+                <input type="text" name="name" placeholder="SW-###" required data-i18n-placeholder="topology.nodeNamePlaceholder" />
+              </label>
+              <label>
+                <span data-i18n="topology.nodeType">Тип устройства</span>
+                <select name="type" required>
+                  <option value="core">Core</option>
+                  <option value="access">Access</option>
+                  <option value="voice">Voice</option>
+                  <option value="edge">Edge</option>
+                </select>
+              </label>
+              <label>
+                <span data-i18n="topology.nodeZone">Зона</span>
+                <select name="zone" required>
+                  <option value="РЖУ-1">РЖУ-1</option>
+                  <option value="РЖУ-2">РЖУ-2</option>
+                  <option value="РЖУ-3">РЖУ-3</option>
+                  <option value="РЖУ-4">РЖУ-4</option>
+                </select>
+              </label>
+              <button class="primary" type="submit" data-i18n="topology.addNode">Добавить узел</button>
+            </form>
+            <form class="topology-form" id="topology-link-form">
+              <label>
+                <span data-i18n="topology.nodeA">Узел A</span>
+                <select name="from" id="topology-link-from" required></select>
+              </label>
+              <label>
+                <span data-i18n="topology.nodeB">Узел B</span>
+                <select name="to" id="topology-link-to" required></select>
+              </label>
+              <label>
+                <span data-i18n="topology.linkType">Тип связи</span>
+                <select name="linkType" required>
+                  <option value="core">Core</option>
+                  <option value="access">Access</option>
+                  <option value="alert">Alert</option>
+                </select>
+              </label>
+              <button class="ghost" type="submit" data-i18n="topology.addLink">Добавить связь</button>
+            </form>
+            <div class="topology-hint">
+              <p class="hint-title" data-i18n="topology.hintTitle">Быстрое соединение</p>
+              <p class="hint-text" data-i18n="topology.hintText">Включите «Редактировать» и «Линии», кликните по двум узлам и выберите тип связи.</p>
+              <p class="hint-text" data-i18n="topology.panZoomHint">Колёсиком — масштаб, перетаскиванием пустой области — панорама.</p>
+            </div>
+            <div class="topology-summary">
+              <div>
+                <p class="summary-label" data-i18n="topology.summaryNodes">Узлов</p>
+                <p class="summary-value" id="topology-node-count">--</p>
+              </div>
+              <div>
+                <p class="summary-label" data-i18n="topology.summaryLinks">Связей</p>
+                <p class="summary-value" id="topology-link-count">--</p>
+              </div>
+              <div>
+                <p class="summary-label" data-i18n="topology.summaryZones">Зон</p>
+                <p class="summary-value">4</p>
+              </div>
+            </div>
+            <div class="topology-list" id="topology-node-list"></div>
+          </aside>
+          <div class="topology-canvas">
+            <div class="topology-stage" id="topology-stage"></div>
+          </div>
+        </div>
+      </section>
+
+
+        <input type="file" id="topology-import-file" accept="application/json" hidden />
+
+      <section class="page-section" id="events" data-section="events">
+        <header class="topbar">
+          <div>
+            <p class="page-title" data-i18n="events.title">События</p>
+            <p class="page-subtitle" data-i18n="events.subtitle">Лента инцидентов и уведомлений</p>
+          </div>
+          <div class="topbar-actions events-filters" id="events-filters">
+            <button class="ghost active" type="button" data-event-filter="all" data-i18n="events.filterAll">Все</button>
+            <button class="ghost" type="button" data-event-filter="critical" data-i18n="events.filterCritical">Критично</button>
+            <button class="ghost" type="button" data-event-filter="warning" data-i18n="events.filterWarning">Предупреждение</button>
+            <button class="ghost" type="button" data-event-filter="info" data-i18n="events.filterInfo">Инфо</button>
+            <button class="ghost" type="button" id="events-live-toggle" data-i18n="events.liveOn">Live: вкл</button>
+            <span class="events-live-status" id="events-live-status" data-i18n="events.liveStatus">Обновлено только что</span>
+            <button class="primary" data-i18n="actions.exportCsv">Экспорт CSV</button>
+          </div>
+        </header>
+        <div class="grid">
+          <article class="card span-4">
+            <div class="card-header compact">
+              <div>
+                <p class="card-title" data-i18n="events.overviewTitle">Командный центр инцидентов</p>
+                <p class="card-subtitle" data-i18n="events.overviewSubtitle">Приоритет, эскалация и восстановление</p>
+              </div>
+              <span class="pill danger" id="incident-open-count">2 открыто</span>
+            </div>
+            <div class="incident-summary-grid" id="incident-summary-grid">
+              <div class="incident-summary-card critical">
+                <span class="summary-label" data-i18n="events.summaryCritical">Критичные</span>
+                <strong class="summary-value">2</strong>
+                <span class="summary-meta" data-i18n="events.summaryCriticalMeta">1 требует эскалации</span>
+              </div>
+              <div class="incident-summary-card warning">
+                <span class="summary-label" data-i18n="events.summaryWarning">Под наблюдением</span>
+                <strong class="summary-value">5</strong>
+                <span class="summary-meta" data-i18n="events.summaryWarningMeta">voice и access сегменты</span>
+              </div>
+              <div class="incident-summary-card success">
+                <span class="summary-label" data-i18n="events.summaryRecovered">Восстановлено</span>
+                <strong class="summary-value">18</strong>
+                <span class="summary-meta" data-i18n="events.summaryRecoveredMeta">за последние 24 часа</span>
+              </div>
+            </div>
+            <div class="incident-metrics">
+              <div>
+                <p class="mini-label" data-i18n="events.mttrLabel">MTTR</p>
+                <p class="mini-value">18 мин</p>
+              </div>
+              <div>
+                <p class="mini-label" data-i18n="events.slaRiskLabel">Риск SLA</p>
+                <p class="mini-value danger-text">0.14%</p>
+              </div>
+            </div>
+          </article>
+
+          <article class="card span-8">
+            <div class="card-header compact">
+              <div>
+                <p class="card-title" data-i18n="events.queueTitle">Активные инциденты</p>
+                <p class="card-subtitle" data-i18n="events.queueSubtitle">Очередь реагирования по зонам и сервисам</p>
+              </div>
+              <button class="ghost small" type="button" data-i18n="actions.createTicket">Создать тикет</button>
+            </div>
+            <div class="incident-queue" id="incident-queue">
+              <div class="incident-queue-row critical">
+                <div>
+                  <p class="incident-queue-title">SW-509 • uplink down</p>
+                  <p class="incident-queue-meta">РЖУ-4 • Core uplink • 8 минут назад</p>
+                </div>
+                <span class="badge danger">P1</span>
+                <span class="incident-owner">NOC L2</span>
+              </div>
+              <div class="incident-queue-row warning">
+                <div>
+                  <p class="incident-queue-title">Voice VLAN jitter &gt; 30 ms</p>
+                  <p class="incident-queue-meta">РЖУ-1 • телефония • 25 минут назад</p>
+                </div>
+                <span class="badge warning">P2</span>
+                <span class="incident-owner">Voice team</span>
+              </div>
+              <div class="incident-queue-row success">
+                <div>
+                  <p class="incident-queue-title">Uplink failover completed</p>
+                  <p class="incident-queue-meta">РЖУ-2 • резервный канал • 42 минуты назад</p>
+                </div>
+                <span class="badge success">Resolved</span>
+                <span class="incident-owner">Automation</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="card span-12">
+            <p class="card-title" data-i18n="events.recentTitle">Инциденты за 24 часа</p>
+            <div class="event-table" id="events-table">
+              <div class="event-row" data-severity="critical">
+                <div class="event-indicator danger"></div>
+                <div>
+                  <p class="event-title">Потеря связи с SW-509</p>
+                  <p class="event-meta">Критично • 8 минут назад</p>
+                </div>
+                <div class="event-actions">
+                  <button class="ghost small">Диагностика</button>
+                  <button class="primary small">Эскалация</button>
+                </div>
+              </div>
+              <div class="event-row" data-severity="warning">
+                <div class="event-indicator warning"></div>
+                <div>
+                  <p class="event-title">Рост задержки в сегменте Voice</p>
+                  <p class="event-meta">Предупреждение • 25 минут назад</p>
+                </div>
+                <div class="event-actions">
+                  <button class="ghost small">План работ</button>
+                  <button class="primary small">Создать тикет</button>
+                </div>
+              </div>
+              <div class="event-row" data-severity="info">
+                <div class="event-indicator success"></div>
+                <div>
+                  <p class="event-title">Восстановлен uplink в зоне РЖУ-2</p>
+                  <p class="event-meta">Инфо • 42 минуты назад</p>
+                </div>
+                <div class="event-actions">
+                  <button class="ghost small">Подробнее</button>
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="page-section" id="reports" data-section="reports">
+        <header class="topbar">
+          <div>
+            <p class="page-title" data-i18n="reports.title">Отчёты</p>
+            <p class="page-subtitle" data-i18n="reports.subtitle">Подготовка аналитики и отчётности</p>
+          </div>
+          <div class="topbar-actions">
+            <button class="ghost" data-i18n="actions.templates">Шаблоны</button>
+            <button class="primary" data-i18n="actions.createReport">Создать отчёт</button>
+          </div>
+        </header>
+        <div class="grid">
+          <article class="card span-6">
+            <div class="card-header compact">
+              <div>
+                <p class="card-title" data-i18n="reports.availabilityTitle">Доступность</p>
+                <p class="card-subtitle" id="reports-sla-subtitle" data-i18n="reports.slaSubtitle7d">Отчёт по SLA за неделю</p>
+              </div>
+              <select id="reports-period-select" class="ghost small" aria-label="Период отчёта SLA">
+                <option value="24h" data-i18n="reports.period24h">24ч</option>
+                <option value="7d" selected data-i18n="reports.period7d">7д</option>
+                <option value="30d" data-i18n="reports.period30d">30д</option>
+              </select>
+            </div>
+            <div class="sparkline">
+              <svg viewBox="0 0 200 60" preserveAspectRatio="none">
+                <path id="reports-sla-path" d="M0 40 L20 36 L40 38 L60 28 L80 32 L100 26 L120 30 L140 20 L160 24 L180 18 L200 22" />
+              </svg>
+              <p class="sparkline-label" id="reports-sla-label" data-i18n="reports.slaAvg">Средний SLA: 99.96%</p>
+            </div>
+          </article>
+          <article class="card span-6">
+            <p class="card-title">Телефония</p>
+            <p class="card-subtitle">Качество VoIP за неделю</p>
+            <div class="voice-bars">
+              <div class="bar">
+                <span>MOS</span>
+                <div class="bar-track"><div class="bar-fill success" style="width: 82%;"></div></div>
+                <span>4.3</span>
+              </div>
+              <div class="bar">
+                <span>Потери</span>
+                <div class="bar-track"><div class="bar-fill warning" style="width: 28%;"></div></div>
+                <span>1.1%</span>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="page-section" id="settings" data-section="settings">
+        <header class="topbar">
+          <div>
+            <p class="page-title" data-i18n="settings.title">Настройки</p>
+            <p class="page-subtitle" data-i18n="settings.subtitle">Параметры мониторинга и интеграций</p>
+          </div>
+          <div class="topbar-actions">
+            <button class="ghost" data-i18n="actions.reset">Сброс</button>
+            <button class="primary" data-i18n="actions.save">Сохранить</button>
+          </div>
+        </header>
+        <div class="grid">
+          <article class="card span-12">
+            <p class="card-title">Интеграции</p>
+            <p class="card-subtitle">SNMP, Syslog, VoIP-метрики</p>
+            <div class="device-row">
+              <span>SNMP polling</span>
+              <span class="device-status">Включено</span>
+              <span>Интервал: 30 сек</span>
+              <span>Уровень: v2c</span>
+              <span class="device-actions">
+                <button class="ghost small" type="button" data-i18n="actions.configure">Настроить</button>
+              </span>
+            </div>
+            <div class="device-row">
+              <span>Syslog collector</span>
+              <span class="device-status warning">Внимание</span>
+              <span>Поток: 3.2k/s</span>
+              <span>Бэкап: активен</span>
+              <span class="device-actions">
+                <button class="ghost small" type="button" data-i18n="actions.configure">Настроить</button>
+              </span>
+            </div>
+          </article>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

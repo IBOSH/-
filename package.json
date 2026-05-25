@@ -1,0 +1,9 @@
+{
+  "name": "network-control-center",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node scripts/check-dashboard.mjs",
+    "test:smoke": "node scripts/check-dashboard.mjs"
+  }
+}

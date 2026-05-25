@@ -9,3 +9,10 @@ python3 -m http.server 8080
 ```
 
 Откройте `http://localhost:8080` в браузере.
+
+
+## Проверка
+
+```bash
+node scripts/check-dashboard.mjs
+```
